@@ -1,36 +1,31 @@
 import React from 'react';
-
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ErrorIcon from '@material-ui/icons/Error';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
-
 import { ErrorListProps } from '@rjsf/core';
 
+const Card = require('react-bulma-components/lib/components/card');
+const Icon = require('react-bulma-components/lib/components/icon');
+const List = require('react-bulma-components/lib/components/list');
+const { CardContent, CardHeader } = Card;
+const { CardHeaderTitle } = CardHeader;
+const { ListItem } = List;
+
 const ErrorList = ({ errors }: ErrorListProps) => (
-  <Paper elevation={2}>
-    <Box mb={2} p={2}>
-      <Typography variant="h6">
-        Errors
-      </Typography>
-      <List dense={true}>
+  <Card className="errors-card">
+    <CardHeader>
+      <CardHeaderTitle>Errors</CardHeaderTitle>
+    </CardHeader>
+    <CardContent>
+      <List>
         {errors.map((error, i: number) => {
           return (
             <ListItem key={i}>
-              <ListItemIcon>
-                <ErrorIcon color="error" />
-              </ListItemIcon>
-              <ListItemText primary={error.stack} />
+              <Icon icon="fa-error" />
+              {error.stack}
             </ListItem>
           );
         })}
       </List>
-    </Box>
-  </Paper>
+    </CardContent>
+  </Card>
 );
 
 export default ErrorList;

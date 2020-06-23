@@ -1,8 +1,9 @@
 import React from "react";
-
 import { WidgetProps } from "@rjsf/core";
 
-import TextField from "@material-ui/core/TextField";
+const Element = require('react-bulma-components/lib/components/element');
+const Form = require('react-bulma-components/lib/components/form');
+const { Label, Textarea } = Form;
 
 type CustomWidgetProps = WidgetProps & {
   options: any;
@@ -22,7 +23,6 @@ const TextareaWidget = ({
   onChange,
   options,
   schema,
-  rawErrors = [],
 }: CustomWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -35,21 +35,21 @@ const TextareaWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      placeholder={placeholder}
-      disabled={disabled || readonly}
-      value={value}
-      required={required}
-      autoFocus={autofocus}
-      multiline={true}
-      rows={options.rows || 5}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-    />
+    <>
+      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
+      <Textarea
+        id={id}
+        required={required}
+        placeholder={placeholder}
+        disabled={disabled || readonly}
+        value={value}
+        autoFocus={autofocus}
+        rows={options.rows || 5}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+    </>
   );
 };
 

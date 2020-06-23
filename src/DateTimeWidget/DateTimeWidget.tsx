@@ -1,25 +1,50 @@
 import React from "react";
+import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
-import TextWidget, { TextWidgetProps } from "../TextWidget";
+
+const Element = require('react-bulma-components/lib/components/element');
+const Form = require('react-bulma-components/lib/components/form');
+const { Label, Input } = Form;
 
 const { localToUTC, utcToLocal } = utils;
 
-const DateTimeWidget = (props: TextWidgetProps) => {
-  const value = utcToLocal(props.value);
-  const onChange = (value: any) => {
-    props.onChange(localToUTC(value));
-  };
-
+const DateTimeWidget = ({
+  id,
+  required,
+  readonly,
+  disabled,
+  label,
+  value,
+  onChange,
+  onBlur,
+  onFocus,
+  autofocus,
+  schema
+}: WidgetProps) => {
+  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(localToUTC(value));
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, value);
+  const _onFocus = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  
   return (
-    <TextWidget
-      type="datetime-local"
-      InputLabelProps={{
-        shrink: true,
-      }}
-      {...props}
-      value={value}
-      onChange={onChange}
-    />
+    <>
+      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
+      <Input
+        type="datetime-local"
+        id={id}
+        autoFocus={autofocus}
+        required={required}
+        disabled={disabled || readonly}
+        name={name}
+        value={utcToLocal(value)}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+    </>
   );
 };
 

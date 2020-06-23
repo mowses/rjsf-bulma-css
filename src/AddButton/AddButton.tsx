@@ -1,13 +1,12 @@
 import React from 'react';
-
 import { AddButtonProps } from '@rjsf/core';
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+const Button = require('react-bulma-components/lib/components/button');
+const Icon = require('react-bulma-components/lib/components/icon');
 
 const AddButton: React.FC<AddButtonProps> = props => (
-  <Button {...props} color="secondary">
-    <AddIcon /> Add Item
+  <Button {...props} className="button-add">
+    <Icon icon="fa-add" /> Add Item
   </Button>
 );
 

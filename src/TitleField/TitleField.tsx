@@ -1,18 +1,13 @@
 import React from 'react';
-
 import { FieldProps } from '@rjsf/core';
 
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+const Box = require('react-bulma-components/lib/components/box');
+const Heading = require('react-bulma-components/lib/components/heading');
 
 const TitleField = ({ title }: FieldProps) => (
-  <>
-    <Box mb={1} mt={1}>
-      <Typography variant="h5">{title}</Typography>
-      <Divider />
-    </Box>
-  </>
+  <Box>
+    <Heading renderAs="h5">{title}</Heading>
+  </Box>
 );
 
 export default TitleField;

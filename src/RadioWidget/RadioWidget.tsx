@@ -1,17 +1,13 @@
 import React from "react";
-
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-
 import { WidgetProps } from "@rjsf/core";
+
+const Form = require('react-bulma-components/lib/components/form');
+const { Field, Label, Radio } = Form;
 
 const RadioWidget = ({
   id,
   schema,
   options,
-  value,
   required,
   disabled,
   readonly,
@@ -34,32 +30,31 @@ const RadioWidget = ({
 
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
-      <RadioGroup
-        value={`${value}`}
-        row={row as boolean}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}>
+      <Label htmlFor={id}>{label || schema.title}{required ? <span className="required-mark">*</span> : null}</Label>
+      <Field
+        kind="group"
+        horizontal={row}>
         {(enumOptions as any).map((option: any, i: number) => {
           const itemDisabled =
             enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
 
           const radio = (
-            <FormControlLabel
-              control={<Radio color="primary" key={i} />}
-              label={`${option.label}`}
-              value={`${option.value}`}
-              key={i}
-              disabled={disabled || itemDisabled || readonly}
-            />
+            <Label htmlFor={`${id}_${i}`}>
+              <Radio
+                key={i}
+                value={`${option.value}`}
+                disabled={disabled || itemDisabled || readonly}
+                onChange={_onChange}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+              />
+              {option.label}
+            </Label>
           );
 
           return radio;
         })}
-      </RadioGroup>
+      </Field>
     </>
   );
 };

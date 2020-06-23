@@ -1,9 +1,8 @@
 import React from "react";
-
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-
 import { WidgetProps } from "@rjsf/core";
+
+const Form = require('react-bulma-components/lib/components/form');
+const { Checkbox, Label } = Form;
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
@@ -28,9 +27,8 @@ const CheckboxWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
+    <Label className="checkbox">
+      <Checkbox
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}
@@ -39,10 +37,8 @@ const CheckboxWidget = (props: WidgetProps) => {
           onChange={_onChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
-        />
-      }
-      label={label}
-    />
+        />{label}
+    </Label>
   );
 };
 

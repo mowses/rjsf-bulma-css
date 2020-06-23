@@ -1,27 +1,19 @@
 import React from 'react';
 
-import Button from '@material-ui/core/Button';
-import Add from '@material-ui/icons/Add';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Remove from '@material-ui/icons/Remove';
-import { IconButtonProps as MuiIconButtonProps } from '@material-ui/core/IconButton';
+const Button = require('react-bulma-components/lib/components/button');
 
 const mappings: any = {
-  remove: <Remove />,
-  plus: <Add />,
-  'arrow-up': <ArrowUpward />,
-  'arrow-down': <ArrowDownward />,
+  'remove': 'fa-remove',
+  'plus': 'fa-add',
+  'arrow-up': 'fa-arrow-up',
+  'arrow-down': 'fa-arrow-down',
+  'size': 'small',
 };
 
-type IconButtonProps = MuiIconButtonProps & {
-  icon: string;
-};
-
-const IconButton = (props: IconButtonProps) => {
-  const { icon, className, ...otherProps } = props;
+const IconButton = (props: any) => {
+  const { icon, size, ...otherProps } = props;
   return (
-    <Button {...otherProps} size="small">
+    <Button {...otherProps} size={size || mappings[size]}>
       {mappings[icon]}
     </Button>
   );

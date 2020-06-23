@@ -1,10 +1,9 @@
 import React from 'react';
-
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-
 import { WidgetProps } from '@rjsf/core';
+
+const Element = require('react-bulma-components/lib/components/element');
+const Form = require('react-bulma-components/lib/components/form');
+const { Control, Label, Input } = Form;
 
 const UpDownWidget = ({
   id,
@@ -17,6 +16,7 @@ const UpDownWidget = ({
   onBlur,
   onFocus,
   autofocus,
+  schema,
 }: WidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -28,17 +28,15 @@ const UpDownWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
-      required={required}
+    <Control
+      fullwidth={true}
     >
-      <InputLabel>{label}</InputLabel>
+      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
       <Input
+        type="number"
         id={id}
         autoFocus={autofocus}
         required={required}
-        type="number"
         disabled={disabled || readonly}
         name={name}
         value={value ? value : ''}
@@ -46,7 +44,7 @@ const UpDownWidget = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-    </FormControl>
+    </Control>
   );
 };
 

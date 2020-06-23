@@ -1,15 +1,16 @@
 import React from 'react';
-
 import { utils } from '@rjsf/core';
-
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-
 import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
+
+const Box = require('react-bulma-components/lib/components/box');
+const Columns = require('react-bulma-components/lib/components/columns');
+const Level = require('react-bulma-components/lib/components/level');
+
+const { LevelSide } = Level;
+const { Column } = Columns;
 
 const {
   isMultiSelect,
@@ -76,17 +77,15 @@ const DefaultArrayItem = (props: any) => {
     fontWeight: 'bold',
   };
   return (
-    <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs>
-        <Box mb={2}>
-          <Paper elevation={2}>
-            <Box p={2}>{props.children}</Box>
-          </Paper>
+    <Columns key={props.key} centered={true}>
+      <Column>
+        <Box>
+          {props.children}
         </Box>
-      </Grid>
+      </Column>
 
       {props.hasToolbar && (
-        <Grid item={true}>
+        <Column>
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
               icon="arrow-up"
@@ -117,9 +116,9 @@ const DefaultArrayItem = (props: any) => {
               onClick={props.onDropIndexClick(props.index)}
             />
           )}
-        </Grid>
+        </Column>
       )}
-    </Grid>
+    </Columns>
   );
 };
 
@@ -163,46 +162,44 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
-    <Paper elevation={2}>
-      <Box p={2}>
-        <ArrayFieldTitle
-          key={`array-field-title-${props.idSchema.$id}`}
-          TitleField={props.TitleField}
+    <Box>
+      <ArrayFieldTitle
+        key={`array-field-title-${props.idSchema.$id}`}
+        TitleField={props.TitleField}
+        idSchema={props.idSchema}
+        title={props.uiSchema['ui:title'] || props.title}
+        required={props.required}
+      />
+
+      {(props.uiSchema['ui:description'] || props.schema.description) && (
+        <ArrayFieldDescription
+          key={`array-field-description-${props.idSchema.$id}`}
+          DescriptionField={props.DescriptionField}
           idSchema={props.idSchema}
-          title={props.uiSchema['ui:title'] || props.title}
-          required={props.required}
+          description={
+            props.uiSchema['ui:description'] || props.schema.description
+          }
         />
+      )}
 
-        {(props.uiSchema['ui:description'] || props.schema.description) && (
-          <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
-            idSchema={props.idSchema}
-            description={
-              props.uiSchema['ui:description'] || props.schema.description
-            }
-          />
+      <Level key={`array-item-list-${props.idSchema.$id}`}>
+        {props.items && props.items.map(p => DefaultArrayItem(p))}
+
+        {props.canAdd && (
+          <LevelSide align="right">
+            <Level item={true}>
+              <Box>
+                <AddButton
+                  className="array-item-add"
+                  onClick={props.onAddClick}
+                  disabled={props.disabled || props.readonly}
+                />
+              </Box>
+            </Level>
+          </LevelSide>
         )}
-
-        <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items && props.items.map(p => DefaultArrayItem(p))}
-
-          {props.canAdd && (
-            <Grid container justify="flex-end">
-              <Grid item={true}>
-                <Box mt={2}>
-                  <AddButton
-                    className="array-item-add"
-                    onClick={props.onAddClick}
-                    disabled={props.disabled || props.readonly}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      </Box>
-    </Paper>
+      </Level>
+    </Box>
   );
 };
 

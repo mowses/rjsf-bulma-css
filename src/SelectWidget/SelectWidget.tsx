@@ -1,10 +1,9 @@
 import React from "react";
+import { WidgetProps, utils } from "@rjsf/core";
 
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+const Element = require('react-bulma-components/lib/components/element');
+const Form = require('react-bulma-components/lib/components/form');
+const { Label, Select } = Form;
 
 const { asNumber, guessType } = utils;
 
@@ -72,35 +71,32 @@ const SelectWidget = ({
     onFocus(id, processValue(schema, value));
 
   return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      name={name}
-      select
-      value={typeof value === "undefined" ? emptyValue : value}
-      required={required}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      SelectProps={{
-        multiple: typeof multiple === "undefined" ? false : multiple,
-      }}>
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any =
-          enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-        return (
-          <MenuItem key={i} value={value} disabled={disabled}>
-            {label}
-          </MenuItem>
-        );
-      })}
-    </TextField>
+    <>
+      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
+      <Select
+        id={id}
+        name={name}
+        value={typeof value === "undefined" ? emptyValue : value}
+        required={required}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        multiple={typeof multiple === "undefined" ? false : multiple}
+        >
+        {(enumOptions as any).map(({ value, label }: any, i: number) => {
+          const disabled: any =
+            enumDisabled && (enumDisabled as any).indexOf(value) != -1;
+          return (
+            <Element key={i} renderAs="option" value={value} disabled={disabled}>
+              {label}
+            </Element>
+          );
+        })}
+      </Select>
+      {rawErrors}
+    </>
   );
 };
 

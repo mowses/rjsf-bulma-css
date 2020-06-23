@@ -1,10 +1,9 @@
 import React from "react";
+import { WidgetProps, utils } from "@rjsf/core";
 
-import Slider from "@material-ui/core/Slider";
-import FormLabel from "@material-ui/core/FormLabel";
-
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
+const Element = require('react-bulma-components/lib/components/element');
+const Form = require('react-bulma-components/lib/components/form');
+const { Label } = Form;
 
 const { rangeSpec } = utils;
 
@@ -23,7 +22,7 @@ const RangeWidget = ({
 }: WidgetProps) => {
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
-  const _onChange = ({}, value: any) =>
+  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -33,15 +32,14 @@ const RangeWidget = ({
 
   return (
     <>
-      <FormLabel required={required} id={id}>
-        {label}
-      </FormLabel>
-      <Slider
+      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
+      <input
+        type="range"
+        className="slider is-fullwidth"
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        valueLabelDisplay="auto"
         {...sliderProps}
       />
     </>

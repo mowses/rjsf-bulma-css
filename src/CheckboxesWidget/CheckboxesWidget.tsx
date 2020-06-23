@@ -1,11 +1,8 @@
 import React from "react";
-
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-
 import { WidgetProps } from "@rjsf/core";
+
+const Form = require('react-bulma-components/lib/components/form');
+const { Checkbox, Field, Label } = Form;
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -57,10 +54,8 @@ const CheckboxesWidget = ({
 
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
-      <FormGroup>
+      <Label htmlFor={id}>{label || schema.title}{required ? <span className="required-mark">*</span> : null}</Label>
+      <Field kind="group">
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
@@ -77,20 +72,18 @@ const CheckboxesWidget = ({
             />
           );
           return inline ? (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
+            <Label htmlFor={`${id}_${index}`} key={index}>
+            {option.label}
+            {checkbox}
+            </Label>
           ) : (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
+            <Label htmlFor={`${id}_${index}`} key={index}>
+              {option.label}
+              {checkbox}
+            </Label>
           );
         })}
-      </FormGroup>
+      </Field>
     </>
   );
 };
