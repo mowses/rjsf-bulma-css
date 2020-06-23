@@ -13,10 +13,9 @@ var Button = _interopDefault(require('react-bulma-components/lib/components/butt
 var Icon = _interopDefault(require('react-bulma-components/lib/components/icon'));
 var Card = _interopDefault(require('react-bulma-components/lib/components/card'));
 var List = _interopDefault(require('react-bulma-components/lib/components/list'));
+var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
 var Heading = _interopDefault(require('react-bulma-components/lib/components/heading'));
 var Form$1 = _interopDefault(require('react-bulma-components/lib/components/form'));
-var Notification = _interopDefault(require('react-bulma-components/lib/components/notification'));
-var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -215,22 +214,24 @@ var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(p
 var ErrorList = function ErrorList(_ref) {
   var errors = _ref.errors;
   return React.createElement(Card, {
-    className: "errors-card"
-  }, React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, "Errors")), React.createElement(Card.Content, null, React.createElement(List, null, errors.map(function (error, i) {
+    className: "error-list-card"
+  }, React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, "Errors")), React.createElement(Card.Content, null, React.createElement(List, {
+    renderAs: "ul",
+    className: "error-list-items"
+  }, errors.map(function (error, i) {
     return React.createElement(List.Item, {
+      renderAs: "li",
       key: i
-    }, React.createElement(Icon, {
-      icon: "fa-error"
-    }), error.stack);
+    }, error.stack);
   }))));
 };
 
 var DescriptionField = function DescriptionField(_ref) {
   var description = _ref.description;
   if (!description) return null;
-  return React.createElement(Heading, {
-    subtitle: true,
-    size: 6
+  return React.createElement(Element, {
+    renderAs: "p",
+    className: "description"
   }, description);
 };
 
@@ -246,20 +247,18 @@ var Fields = {
   TitleField: TitleField
 };
 
-var Field = Form$1.Field,
-    Help = Form$1.Help,
-    Label = Form$1.Label;
-
-function BulmaFieldErrorListTemplate(errors) {
-  if (!errors) return null;
+var BulmaFieldErrorListTemplate = function BulmaFieldErrorListTemplate(errors) {
+  if (!errors || !errors.length) return null;
   return React.createElement(List, {
-    className: "errors-list"
+    renderAs: "ul",
+    className: "error-list-field"
   }, errors.map(function (error, index) {
-    return React.createElement(Notification, {
+    return React.createElement(List.Item, {
+      renderAs: "li",
       key: index
     }, error);
   }));
-}
+};
 
 var FieldTemplate = function FieldTemplate(_ref) {
   var id = _ref.id,
@@ -271,14 +270,16 @@ var FieldTemplate = function FieldTemplate(_ref) {
       label = _ref.label,
       required = _ref.required,
       _ref$rawErrors = _ref.rawErrors,
-      rawErrors = _ref$rawErrors === void 0 ? [] : _ref$rawErrors;
-  return React.createElement(Field, {
+      rawErrors = _ref$rawErrors === void 0 ? [] : _ref$rawErrors,
+      rawHelp = _ref.rawHelp;
+  return React.createElement(Form$1.Field, {
     className: classNames
-  }, displayLabel && label ? React.createElement(Label, {
+  }, displayLabel && label ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label, required ? React.createElement("span", {
-    className: "required-mark"
-  }, "*") : null) : null, description, children, BulmaFieldErrorListTemplate(rawErrors), React.createElement(Help, null, help));
+  }, label) : null, description, children, BulmaFieldErrorListTemplate(rawErrors), React.createElement(Form$1.Help, {
+    renderAs: "div"
+  }, rawHelp ? rawHelp : help));
 };
 
 var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
@@ -286,8 +287,11 @@ var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
       title = _ref.title,
       properties = _ref.properties,
       uiSchema = _ref.uiSchema;
-  return React.createElement(Card, null, (uiSchema['ui:title'] || title) && React.createElement(Card.Header, null, title), description && React.createElement("p", null, description), React.createElement(Card.Content, null, properties.map(function (element, index) {
-    return React.createElement("div", {
+  return React.createElement(Card, null, uiSchema['ui:title'] || title ? React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, title), React.createElement(Card.Header.Icon, null)) : null, React.createElement(Card.Content, null, description ? React.createElement(Element, {
+    renderAs: "div",
+    className: "subtitle description"
+  }, description) : null, properties.map(function (element, index) {
+    return React.createElement(Form$1.Field, {
       key: index,
       className: "field-row"
     }, element.content);
@@ -295,7 +299,7 @@ var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
 };
 
 var Checkbox = Form$1.Checkbox,
-    Label$1 = Form$1.Label;
+    Label = Form$1.Label;
 
 var CheckboxWidget = function CheckboxWidget(props) {
   var id = props.id,
@@ -325,7 +329,7 @@ var CheckboxWidget = function CheckboxWidget(props) {
     return onFocus(id, value);
   };
 
-  return React.createElement(Label$1, {
+  return React.createElement(Label, {
     className: "checkbox"
   }, React.createElement(Checkbox, {
     id: id,
@@ -340,8 +344,8 @@ var CheckboxWidget = function CheckboxWidget(props) {
 };
 
 var Checkbox$1 = Form$1.Checkbox,
-    Field$1 = Form$1.Field,
-    Label$2 = Form$1.Label;
+    Field = Form$1.Field,
+    Label$1 = Form$1.Label;
 
 var selectValue = function selectValue(value, selected, all) {
   var at = all.indexOf(value);
@@ -402,11 +406,11 @@ var CheckboxesWidget = function CheckboxesWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$2, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$1, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement("span", {
     className: "required-mark"
-  }, "*") : null), React.createElement(Field$1, {
+  }, "*") : null), React.createElement(Field, {
     kind: "group"
   }, enumOptions.map(function (option, index) {
     var checked = value.indexOf(option.value) !== -1;
@@ -420,20 +424,71 @@ var CheckboxesWidget = function CheckboxesWidget(_ref) {
       onBlur: _onBlur,
       onFocus: _onFocus
     });
-    return inline ? React.createElement(Label$2, {
+    return inline ? React.createElement(Label$1, {
       htmlFor: id + "_" + index,
       key: index
-    }, option.label, checkbox) : React.createElement(Label$2, {
+    }, option.label, checkbox) : React.createElement(Label$1, {
       htmlFor: id + "_" + index,
       key: index
     }, option.label, checkbox);
   })));
 };
 
-var Label$3 = Form$1.Label,
+var Label$2 = Form$1.Label,
     Input = Form$1.Input;
 
 var ColorWidget = function ColorWidget(_ref) {
+  var id = _ref.id,
+      required = _ref.required,
+      readonly = _ref.readonly,
+      disabled = _ref.disabled,
+      label = _ref.label,
+      value = _ref.value,
+      onChange = _ref.onChange,
+      onBlur = _ref.onBlur,
+      onFocus = _ref.onFocus,
+      autofocus = _ref.autofocus,
+      options = _ref.options,
+      schema = _ref.schema;
+
+  var _onChange = function _onChange(_ref2) {
+    var value = _ref2.target.value;
+    return onChange(value === "" ? options.emptyValue : value);
+  };
+
+  var _onBlur = function _onBlur(_ref3) {
+    var value = _ref3.target.value;
+    return onBlur(id, value);
+  };
+
+  var _onFocus = function _onFocus(_ref4) {
+    var value = _ref4.target.value;
+    return onFocus(id, value);
+  };
+
+  return React.createElement(React.Fragment, null, React.createElement(Label$2, {
+    htmlFor: id
+  }, label || schema.title, required ? React.createElement(Element, {
+    renderAs: "span",
+    className: "required-mark"
+  }, "*") : null), React.createElement(Input, {
+    type: "color",
+    id: id,
+    autoFocus: autofocus,
+    required: required,
+    disabled: disabled || readonly,
+    name: name,
+    value: value || value === 0 ? value : "",
+    onChange: _onChange,
+    onBlur: _onBlur,
+    onFocus: _onFocus
+  }));
+};
+
+var Label$3 = Form$1.Label,
+    Input$1 = Form$1.Input;
+
+var DateWidget = function DateWidget(_ref) {
   var id = _ref.id,
       required = _ref.required,
       readonly = _ref.readonly,
@@ -467,57 +522,6 @@ var ColorWidget = function ColorWidget(_ref) {
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
-  }, "*") : null), React.createElement(Input, {
-    type: "color",
-    id: id,
-    autoFocus: autofocus,
-    required: required,
-    disabled: disabled || readonly,
-    name: name,
-    value: value || value === 0 ? value : "",
-    onChange: _onChange,
-    onBlur: _onBlur,
-    onFocus: _onFocus
-  }));
-};
-
-var Label$4 = Form$1.Label,
-    Input$1 = Form$1.Input;
-
-var DateWidget = function DateWidget(_ref) {
-  var id = _ref.id,
-      required = _ref.required,
-      readonly = _ref.readonly,
-      disabled = _ref.disabled,
-      label = _ref.label,
-      value = _ref.value,
-      onChange = _ref.onChange,
-      onBlur = _ref.onBlur,
-      onFocus = _ref.onFocus,
-      autofocus = _ref.autofocus,
-      options = _ref.options,
-      schema = _ref.schema;
-
-  var _onChange = function _onChange(_ref2) {
-    var value = _ref2.target.value;
-    return onChange(value === "" ? options.emptyValue : value);
-  };
-
-  var _onBlur = function _onBlur(_ref3) {
-    var value = _ref3.target.value;
-    return onBlur(id, value);
-  };
-
-  var _onFocus = function _onFocus(_ref4) {
-    var value = _ref4.target.value;
-    return onFocus(id, value);
-  };
-
-  return React.createElement(React.Fragment, null, React.createElement(Label$4, {
-    htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
   }, "*") : null), React.createElement(Input$1, {
     type: "date",
     id: id,
@@ -532,7 +536,7 @@ var DateWidget = function DateWidget(_ref) {
   }));
 };
 
-var Label$5 = Form$1.Label,
+var Label$4 = Form$1.Label,
     Input$2 = Form$1.Input;
 var localToUTC = core.utils.localToUTC,
     utcToLocal = core.utils.utcToLocal;
@@ -565,7 +569,7 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$5, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$4, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -584,7 +588,7 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
   }));
 };
 
-var Label$6 = Form$1.Label,
+var Label$5 = Form$1.Label,
     Input$3 = Form$1.Input;
 
 var EmailWidget = function EmailWidget(_ref) {
@@ -616,7 +620,7 @@ var EmailWidget = function EmailWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$6, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$5, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -683,8 +687,8 @@ var PasswordWidget = function PasswordWidget(_ref) {
   });
 };
 
-var Field$2 = Form$1.Field,
-    Label$7 = Form$1.Label,
+var Field$1 = Form$1.Field,
+    Label$6 = Form$1.Label,
     Radio = Form$1.Radio;
 
 var RadioWidget = function RadioWidget(_ref) {
@@ -718,16 +722,16 @@ var RadioWidget = function RadioWidget(_ref) {
   };
 
   var row = options ? options.inline : false;
-  return React.createElement(React.Fragment, null, React.createElement(Label$7, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$6, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement("span", {
     className: "required-mark"
-  }, "*") : null), React.createElement(Field$2, {
+  }, "*") : null), React.createElement(Field$1, {
     kind: "group",
     horizontal: row
   }, enumOptions.map(function (option, i) {
     var itemDisabled = enumDisabled && enumDisabled.indexOf(option.value) != -1;
-    var radio = React.createElement(Label$7, {
+    var radio = React.createElement(Label$6, {
       htmlFor: id + "_" + i
     }, React.createElement(Radio, {
       key: i,
@@ -741,7 +745,7 @@ var RadioWidget = function RadioWidget(_ref) {
   })));
 };
 
-var Label$8 = Form$1.Label;
+var Label$7 = Form$1.Label;
 var rangeSpec = core.utils.rangeSpec;
 
 var RangeWidget = function RangeWidget(_ref) {
@@ -778,7 +782,7 @@ var RangeWidget = function RangeWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$8, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$7, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -793,7 +797,7 @@ var RangeWidget = function RangeWidget(_ref) {
   }, sliderProps)));
 };
 
-var Label$9 = Form$1.Label,
+var Label$8 = Form$1.Label,
     Select = Form$1.Select;
 var asNumber = core.utils.asNumber,
     guessType = core.utils.guessType;
@@ -870,7 +874,7 @@ var SelectWidget = function SelectWidget(_ref) {
     return onFocus(id, processValue(schema, value));
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$9, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$8, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -899,7 +903,7 @@ var SelectWidget = function SelectWidget(_ref) {
   })), rawErrors);
 };
 
-var Label$a = Form$1.Label,
+var Label$9 = Form$1.Label,
     Textarea = Form$1.Textarea;
 
 var TextareaWidget = function TextareaWidget(_ref) {
@@ -932,7 +936,7 @@ var TextareaWidget = function TextareaWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$a, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$9, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -951,8 +955,7 @@ var TextareaWidget = function TextareaWidget(_ref) {
   }));
 };
 
-var Label$b = Form$1.Label,
-    Input$5 = Form$1.Input;
+var Input$5 = Form$1.Input;
 
 var TextWidget = function TextWidget(_ref) {
   var id = _ref.id,
@@ -960,7 +963,6 @@ var TextWidget = function TextWidget(_ref) {
       readonly = _ref.readonly,
       disabled = _ref.disabled,
       type = _ref.type,
-      label = _ref.label,
       value = _ref.value,
       onChange = _ref.onChange,
       onBlur = _ref.onBlur,
@@ -968,10 +970,12 @@ var TextWidget = function TextWidget(_ref) {
       autofocus = _ref.autofocus,
       options = _ref.options,
       schema = _ref.schema;
+  var input_type = type || schema.type;
 
-  // PropTypes.checkPropTypes(Input.propTypes, {type: type || (schema.type as string)}, 'prop', 'Input', function() {
-  //   type = 'text';
-  // });
+  if (!['text', 'email', 'tel', 'password', 'number', 'search', 'color', 'date', 'time', 'datetime-local'].includes(input_type)) {
+    input_type = 'text';
+  }
+
   var _onChange = function _onChange(_ref2) {
     var value = _ref2.target.value;
     return onChange(value === "" ? options.emptyValue : value);
@@ -987,13 +991,8 @@ var TextWidget = function TextWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$b, {
-    htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input$5, {
-    type: type || schema.type,
+  return React.createElement(Input$5, {
+    type: input_type,
     id: id,
     autoFocus: autofocus,
     required: required,
@@ -1003,11 +1002,11 @@ var TextWidget = function TextWidget(_ref) {
     onChange: _onChange,
     onBlur: _onBlur,
     onFocus: _onFocus
-  }));
+  });
 };
 
 var Control = Form$1.Control,
-    Label$c = Form$1.Label,
+    Label$a = Form$1.Label,
     Input$6 = Form$1.Input;
 
 var UpDownWidget = function UpDownWidget(_ref) {
@@ -1040,7 +1039,7 @@ var UpDownWidget = function UpDownWidget(_ref) {
 
   return React.createElement(Control, {
     fullwidth: true
-  }, React.createElement(Label$c, {
+  }, React.createElement(Label$a, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -1059,7 +1058,7 @@ var UpDownWidget = function UpDownWidget(_ref) {
   }));
 };
 
-var Label$d = Form$1.Label,
+var Label$b = Form$1.Label,
     Input$7 = Form$1.Input;
 
 var URLWidget = function URLWidget(_ref) {
@@ -1091,7 +1090,7 @@ var URLWidget = function URLWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$d, {
+  return React.createElement(React.Fragment, null, React.createElement(Label$b, {
     htmlFor: id
   }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
@@ -1134,9 +1133,10 @@ var _getDefaultRegistry = /*#__PURE__*/getDefaultRegistry$1(),
     widgets = _getDefaultRegistry.widgets;
 
 var DefaultChildren = function DefaultChildren() {
-  return React.createElement(Box, null, React.createElement(Button, {
+  return React.createElement(Button, {
+    className: "submit-button",
     type: "submit"
-  }, "Submit"));
+  }, "Submit");
 };
 
 var Theme = {

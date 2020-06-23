@@ -1,20 +1,17 @@
 import React from "react";
 import { FieldTemplateProps } from "@rjsf/core";
 import Form from 'react-bulma-components/lib/components/form';
-import Notification from 'react-bulma-components/lib/components/notification';
 import List from 'react-bulma-components/lib/components/list';
 
-const { Field, Help, Label } = Form;
+const BulmaFieldErrorListTemplate = (errors: any) => {
+  if (!errors || !errors.length) return null;
 
-function BulmaFieldErrorListTemplate(errors: any) {
-  if (!errors) return null;
-
-  return <List className="errors-list">
+  return <List renderAs="ul" className="error-list-field">
     {errors.map( (error: any, index: number) => (
-      <Notification key={index}>{error}</Notification>
+      <List.Item renderAs="li" key={index}>{error}</List.Item>
     ))}
   </List>
-}
+};
 
 const FieldTemplate = ({
   id,
@@ -25,18 +22,19 @@ const FieldTemplate = ({
   help,
   label,
   required,
-  rawErrors = []
+  rawErrors = [],
+  rawHelp,
 }: FieldTemplateProps) => {
   return (
-    <Field className={classNames}>
+    <Form.Field className={classNames}>
       {displayLabel && label ? (
-        <Label htmlFor={id}>{label}{required ? <span className="required-mark">*</span> : null}</Label>
+        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label}</Form.Label>
       ) : null}
       {description}
       {children}
       {BulmaFieldErrorListTemplate(rawErrors)}
-      <Help>{help}</Help>
-    </Field>
+      <Form.Help renderAs="div">{rawHelp ? rawHelp : help}</Form.Help>
+    </Form.Field>
   );
 };
 

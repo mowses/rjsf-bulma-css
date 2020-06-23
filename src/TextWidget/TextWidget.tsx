@@ -1,10 +1,8 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/core";
-import PropTypes from 'prop-types';
-import Element from 'react-bulma-components/lib/components/element';
 import Form from 'react-bulma-components/lib/components/form';
 
-const { Label, Input } = Form;
+const { Input } = Form;
 
 const TextWidget = ({
   id,
@@ -12,7 +10,6 @@ const TextWidget = ({
   readonly,
   disabled,
   type,
-  label,
   value,
   onChange,
   onBlur,
@@ -21,9 +18,22 @@ const TextWidget = ({
   options,
   schema,
 }: WidgetProps) => {
-  PropTypes.checkPropTypes(Input.propTypes, {type: type || (schema.type as string)}, 'prop', 'Input', function() {
-    type = 'text';
-  });
+  
+  let input_type = type || (schema.type as string);
+
+  if (!['text',
+    'email',
+    'tel',
+    'password',
+    'number',
+    'search',
+    'color',
+    'date',
+    'time',
+    'datetime-local'
+    ].includes(input_type)) {
+    input_type = 'text';
+  }
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -35,21 +45,18 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <>
-      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
-      <Input
-        type={type}
-        id={id}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        name={name}
-        value={value || value === 0 ? value : ""}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-    </>
+    <Input
+      type={input_type}
+      id={id}
+      autoFocus={autofocus}
+      required={required}
+      disabled={disabled || readonly}
+      name={name}
+      value={value || value === 0 ? value : ""}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 };
 
