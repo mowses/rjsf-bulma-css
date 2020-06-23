@@ -7,11 +7,10 @@ import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import Widgets from "../Widgets";
 import { ThemeProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
+import Box from 'react-bulma-components/lib/components/box';
+import Button from 'react-bulma-components/lib/components/button';
 
-const Box = require('react-bulma-components/lib/components/box');
-const Button = require('react-bulma-components/lib/components/button');
 const { getDefaultRegistry } = utils;
-
 const { fields, widgets } = getDefaultRegistry();
 
 const DefaultChildren = () => (

@@ -1,8 +1,7 @@
 import React from 'react';
 import { FieldProps } from '@rjsf/core';
-
-const Box = require('react-bulma-components/lib/components/box');
-const Heading = require('react-bulma-components/lib/components/heading');
+import Box from 'react-bulma-components/lib/components/box';
+import Heading from 'react-bulma-components/lib/components/heading';
 
 const TitleField = ({ title }: FieldProps) => (
   <Box>

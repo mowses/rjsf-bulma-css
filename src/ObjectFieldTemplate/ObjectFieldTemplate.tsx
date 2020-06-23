@@ -1,10 +1,6 @@
 import React from 'react';
 import { ObjectFieldTemplateProps } from '@rjsf/core';
-
-const Card = require('react-bulma-components/lib/components/card');
-const Content = require('react-bulma-components/lib/components/content');
-
-const { Header } = Card;
+import Card from 'react-bulma-components/lib/components/card';
 
 const ObjectFieldTemplate = ({
   description,
@@ -16,16 +12,16 @@ const ObjectFieldTemplate = ({
   return (
     <Card>
       {(uiSchema['ui:title'] || title) && (
-        <Header>{title}</Header>
+        <Card.Header>{title}</Card.Header>
       )}
       {description && (
         <p>{description}</p>
       )}
-      <Content>
+      <Card.Content>
         {properties.map( (element, index) => (
           <div key={index} className="field-row">{element.content}</div>
         ))}
-      </Content>
+      </Card.Content>
     </Card>
   );
 };

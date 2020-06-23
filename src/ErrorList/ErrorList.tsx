@@ -1,30 +1,26 @@
 import React from 'react';
 import { ErrorListProps } from '@rjsf/core';
-
-const Card = require('react-bulma-components/lib/components/card');
-const Icon = require('react-bulma-components/lib/components/icon');
-const List = require('react-bulma-components/lib/components/list');
-const { CardContent, CardHeader } = Card;
-const { CardHeaderTitle } = CardHeader;
-const { ListItem } = List;
+import Card from 'react-bulma-components/lib/components/card';
+import Icon from 'react-bulma-components/lib/components/icon';
+import List from 'react-bulma-components/lib/components/list';
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <Card className="errors-card">
-    <CardHeader>
-      <CardHeaderTitle>Errors</CardHeaderTitle>
-    </CardHeader>
-    <CardContent>
+    <Card.Header>
+      <Card.Header.Title>Errors</Card.Header.Title>
+    </Card.Header>
+    <Card.Content>
       <List>
         {errors.map((error, i: number) => {
           return (
-            <ListItem key={i}>
+            <List.Item key={i}>
               <Icon icon="fa-error" />
               {error.stack}
-            </ListItem>
+            </List.Item>
           );
         })}
       </List>
-    </CardContent>
+    </Card.Content>
   </Card>
 );
 

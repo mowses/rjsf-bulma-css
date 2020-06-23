@@ -1,12 +1,10 @@
 import React from "react";
 import { WidgetProps, utils } from "@rjsf/core";
+import Element from 'react-bulma-components/lib/components/element';
+import Form from 'react-bulma-components/lib/components/form';
 
-const Element = require('react-bulma-components/lib/components/element');
-const Form = require('react-bulma-components/lib/components/form');
 const { Label, Select } = Form;
-
 const { asNumber, guessType } = utils;
-
 const nums = new Set(["number", "integer"]);
 
 /**

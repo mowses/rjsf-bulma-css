@@ -1,7 +1,7 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/core";
+import Form from 'react-bulma-components/lib/components/form';
 
-const Form = require('react-bulma-components/lib/components/form');
 const { Checkbox, Label } = Form;
 
 const CheckboxWidget = (props: WidgetProps) => {

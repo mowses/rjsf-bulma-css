@@ -1,9 +1,8 @@
 import React from "react";
 import { FieldTemplateProps } from "@rjsf/core";
-
-const Form = require('react-bulma-components');
-const Notification = require('react-bulma-components/lib/components/notification');
-const List = require('react-bulma-components/lib/components/list');
+import Form from 'react-bulma-components/lib/components/form';
+import Notification from 'react-bulma-components/lib/components/notification';
+import List from 'react-bulma-components/lib/components/list';
 
 const { Field, Help, Label } = Form;
 

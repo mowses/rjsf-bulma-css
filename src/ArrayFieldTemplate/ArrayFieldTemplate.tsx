@@ -1,16 +1,11 @@
 import React from 'react';
 import { utils } from '@rjsf/core';
 import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
-
+import Box from 'react-bulma-components/lib/components/box';
+import Columns from 'react-bulma-components/lib/components/columns';
+import Level from 'react-bulma-components/lib/components/level';
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
-
-const Box = require('react-bulma-components/lib/components/box');
-const Columns = require('react-bulma-components/lib/components/columns');
-const Level = require('react-bulma-components/lib/components/level');
-
-const { LevelSide } = Level;
-const { Column } = Columns;
 
 const {
   isMultiSelect,
@@ -78,14 +73,14 @@ const DefaultArrayItem = (props: any) => {
   };
   return (
     <Columns key={props.key} centered={true}>
-      <Column>
+      <Columns.Column>
         <Box>
           {props.children}
         </Box>
-      </Column>
+      </Columns.Column>
 
       {props.hasToolbar && (
-        <Column>
+        <Columns.Column>
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
               icon="arrow-up"
@@ -116,7 +111,7 @@ const DefaultArrayItem = (props: any) => {
               onClick={props.onDropIndexClick(props.index)}
             />
           )}
-        </Column>
+        </Columns.Column>
       )}
     </Columns>
   );
@@ -186,7 +181,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         {props.items && props.items.map(p => DefaultArrayItem(p))}
 
         {props.canAdd && (
-          <LevelSide align="right">
+          <Level.Side align="right">
             <Level item={true}>
               <Box>
                 <AddButton
@@ -196,7 +191,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                 />
               </Box>
             </Level>
-          </LevelSide>
+          </Level.Side>
         )}
       </Level>
     </Box>

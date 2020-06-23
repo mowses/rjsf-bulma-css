@@ -1,5 +1,16 @@
 import { utils, withTheme } from '@rjsf/core';
 import React from 'react';
+import Box from 'react-bulma-components/lib/components/box';
+import Columns from 'react-bulma-components/lib/components/columns';
+import Level from 'react-bulma-components/lib/components/level';
+import Button from 'react-bulma-components/lib/components/button';
+import Icon from 'react-bulma-components/lib/components/icon';
+import Card from 'react-bulma-components/lib/components/card';
+import List from 'react-bulma-components/lib/components/list';
+import Heading from 'react-bulma-components/lib/components/heading';
+import Form$1 from 'react-bulma-components/lib/components/form';
+import Notification from 'react-bulma-components/lib/components/notification';
+import Element from 'react-bulma-components/lib/components/element';
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -38,10 +49,6 @@ function _objectWithoutPropertiesLoose(source, excluded) {
   return target;
 }
 
-var Button = /*#__PURE__*/require('react-bulma-components/lib/components/button');
-
-var Icon = /*#__PURE__*/require('react-bulma-components/lib/components/icon');
-
 var AddButton = function AddButton(props) {
   return React.createElement(Button, Object.assign({}, props, {
     className: "button-add"
@@ -49,8 +56,6 @@ var AddButton = function AddButton(props) {
     icon: "fa-add"
   }), " Add Item");
 };
-
-var Button$1 = /*#__PURE__*/require('react-bulma-components/lib/components/button');
 
 var mappings = {
   'remove': 'fa-remove',
@@ -65,19 +70,11 @@ var IconButton = function IconButton(props) {
       size = props.size,
       otherProps = _objectWithoutPropertiesLoose(props, ["icon", "size"]);
 
-  return React.createElement(Button$1, Object.assign({}, otherProps, {
+  return React.createElement(Button, Object.assign({}, otherProps, {
     size: size || mappings[size]
   }), mappings[icon]);
 };
 
-var Box = /*#__PURE__*/require('react-bulma-components/lib/components/box');
-
-var Columns = /*#__PURE__*/require('react-bulma-components/lib/components/columns');
-
-var Level = /*#__PURE__*/require('react-bulma-components/lib/components/level');
-
-var LevelSide = Level.LevelSide;
-var Column = Columns.Column;
 var isMultiSelect = utils.isMultiSelect,
     getDefaultRegistry = utils.getDefaultRegistry;
 
@@ -138,7 +135,7 @@ var DefaultArrayItem = function DefaultArrayItem(props) {
   return React.createElement(Columns, {
     key: props.key,
     centered: true
-  }, React.createElement(Column, null, React.createElement(Box, null, props.children)), props.hasToolbar && React.createElement(Column, null, (props.hasMoveUp || props.hasMoveDown) && React.createElement(IconButton, {
+  }, React.createElement(Columns.Column, null, React.createElement(Box, null, props.children)), props.hasToolbar && React.createElement(Columns.Column, null, (props.hasMoveUp || props.hasMoveDown) && React.createElement(IconButton, {
     icon: "arrow-up",
     className: "array-item-move-up",
     tabIndex: -1,
@@ -198,7 +195,7 @@ var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(p
     key: "array-item-list-" + props.idSchema.$id
   }, props.items && props.items.map(function (p) {
     return DefaultArrayItem(p);
-  }), props.canAdd && React.createElement(LevelSide, {
+  }), props.canAdd && React.createElement(Level.Side, {
     align: "right"
   }, React.createElement(Level, {
     item: true
@@ -209,31 +206,18 @@ var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(p
   }))))));
 };
 
-var Card = /*#__PURE__*/require('react-bulma-components/lib/components/card');
-
-var Icon$1 = /*#__PURE__*/require('react-bulma-components/lib/components/icon');
-
-var List = /*#__PURE__*/require('react-bulma-components/lib/components/list');
-
-var CardContent = Card.CardContent,
-    CardHeader = Card.CardHeader;
-var CardHeaderTitle = CardHeader.CardHeaderTitle;
-var ListItem = List.ListItem;
-
 var ErrorList = function ErrorList(_ref) {
   var errors = _ref.errors;
   return React.createElement(Card, {
     className: "errors-card"
-  }, React.createElement(CardHeader, null, React.createElement(CardHeaderTitle, null, "Errors")), React.createElement(CardContent, null, React.createElement(List, null, errors.map(function (error, i) {
-    return React.createElement(ListItem, {
+  }, React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, "Errors")), React.createElement(Card.Content, null, React.createElement(List, null, errors.map(function (error, i) {
+    return React.createElement(List.Item, {
       key: i
-    }, React.createElement(Icon$1, {
+    }, React.createElement(Icon, {
       icon: "fa-error"
     }), error.stack);
   }))));
 };
-
-var Heading = /*#__PURE__*/require('react-bulma-components/lib/components/heading');
 
 var DescriptionField = function DescriptionField(_ref) {
   var description = _ref.description;
@@ -244,13 +228,9 @@ var DescriptionField = function DescriptionField(_ref) {
   }, description);
 };
 
-var Box$1 = /*#__PURE__*/require('react-bulma-components/lib/components/box');
-
-var Heading$1 = /*#__PURE__*/require('react-bulma-components/lib/components/heading');
-
 var TitleField = function TitleField(_ref) {
   var title = _ref.title;
-  return React.createElement(Box$1, null, React.createElement(Heading$1, {
+  return React.createElement(Box, null, React.createElement(Heading, {
     renderAs: "h5"
   }, title));
 };
@@ -260,19 +240,13 @@ var Fields = {
   TitleField: TitleField
 };
 
-var Form = /*#__PURE__*/require('react-bulma-components');
-
-var Notification = /*#__PURE__*/require('react-bulma-components/lib/components/notification');
-
-var List$1 = /*#__PURE__*/require('react-bulma-components/lib/components/list');
-
-var Field = Form.Field,
-    Help = Form.Help,
-    Label = Form.Label;
+var Field = Form$1.Field,
+    Help = Form$1.Help,
+    Label = Form$1.Label;
 
 function BulmaFieldErrorListTemplate(errors) {
   if (!errors) return null;
-  return React.createElement(List$1, {
+  return React.createElement(List, {
     className: "errors-list"
   }, errors.map(function (error, index) {
     return React.createElement(Notification, {
@@ -301,26 +275,18 @@ var FieldTemplate = function FieldTemplate(_ref) {
   }, "*") : null) : null, description, children, BulmaFieldErrorListTemplate(rawErrors), React.createElement(Help, null, help));
 };
 
-var Card$1 = /*#__PURE__*/require('react-bulma-components/lib/components/card');
-
-var Content = /*#__PURE__*/require('react-bulma-components/lib/components/content');
-
-var Header = Card$1.Header;
-
 var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
   var description = _ref.description,
       title = _ref.title,
       properties = _ref.properties,
       uiSchema = _ref.uiSchema;
-  return React.createElement(Card$1, null, (uiSchema['ui:title'] || title) && React.createElement(Header, null, title), description && React.createElement("p", null, description), React.createElement(Content, null, properties.map(function (element, index) {
+  return React.createElement(Card, null, (uiSchema['ui:title'] || title) && React.createElement(Card.Header, null, title), description && React.createElement("p", null, description), React.createElement(Card.Content, null, properties.map(function (element, index) {
     return React.createElement("div", {
       key: index,
       className: "field-row"
     }, element.content);
   })));
 };
-
-var Form$1 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
 
 var Checkbox = Form$1.Checkbox,
     Label$1 = Form$1.Label;
@@ -367,11 +333,9 @@ var CheckboxWidget = function CheckboxWidget(props) {
   }), label);
 };
 
-var Form$2 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Checkbox$1 = Form$2.Checkbox,
-    Field$1 = Form$2.Field,
-    Label$2 = Form$2.Label;
+var Checkbox$1 = Form$1.Checkbox,
+    Field$1 = Form$1.Field,
+    Label$2 = Form$1.Label;
 
 var selectValue = function selectValue(value, selected, all) {
   var at = all.indexOf(value);
@@ -460,12 +424,8 @@ var CheckboxesWidget = function CheckboxesWidget(_ref) {
   })));
 };
 
-var Element = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$3 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$3 = Form$3.Label,
-    Input = Form$3.Input;
+var Label$3 = Form$1.Label,
+    Input = Form$1.Input;
 
 var ColorWidget = function ColorWidget(_ref) {
   var id = _ref.id,
@@ -515,12 +475,8 @@ var ColorWidget = function ColorWidget(_ref) {
   }));
 };
 
-var Element$1 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$4 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$4 = Form$4.Label,
-    Input$1 = Form$4.Input;
+var Label$4 = Form$1.Label,
+    Input$1 = Form$1.Input;
 
 var DateWidget = function DateWidget(_ref) {
   var id = _ref.id,
@@ -553,7 +509,7 @@ var DateWidget = function DateWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$4, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$1, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Input$1, {
@@ -570,12 +526,8 @@ var DateWidget = function DateWidget(_ref) {
   }));
 };
 
-var Element$2 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$5 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$5 = Form$5.Label,
-    Input$2 = Form$5.Input;
+var Label$5 = Form$1.Label,
+    Input$2 = Form$1.Input;
 var localToUTC = utils.localToUTC,
     utcToLocal = utils.utcToLocal;
 
@@ -609,7 +561,7 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$5, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$2, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Input$2, {
@@ -626,12 +578,8 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
   }));
 };
 
-var Element$3 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$6 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$6 = Form$6.Label,
-    Input$3 = Form$6.Input;
+var Label$6 = Form$1.Label,
+    Input$3 = Form$1.Input;
 
 var EmailWidget = function EmailWidget(_ref) {
   var id = _ref.id,
@@ -664,7 +612,7 @@ var EmailWidget = function EmailWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$6, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$3, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Input$3, {
@@ -681,9 +629,7 @@ var EmailWidget = function EmailWidget(_ref) {
   }));
 };
 
-var Form$7 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Input$4 = Form$7.Input;
+var Input$4 = Form$1.Input;
 
 var PasswordWidget = function PasswordWidget(_ref) {
   var id = _ref.id,
@@ -731,11 +677,9 @@ var PasswordWidget = function PasswordWidget(_ref) {
   });
 };
 
-var Form$8 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Field$2 = Form$8.Field,
-    Label$7 = Form$8.Label,
-    Radio = Form$8.Radio;
+var Field$2 = Form$1.Field,
+    Label$7 = Form$1.Label,
+    Radio = Form$1.Radio;
 
 var RadioWidget = function RadioWidget(_ref) {
   var id = _ref.id,
@@ -791,11 +735,7 @@ var RadioWidget = function RadioWidget(_ref) {
   })));
 };
 
-var Element$4 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$9 = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$8 = Form$9.Label;
+var Label$8 = Form$1.Label;
 var rangeSpec = utils.rangeSpec;
 
 var RangeWidget = function RangeWidget(_ref) {
@@ -834,7 +774,7 @@ var RangeWidget = function RangeWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$8, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$4, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement("input", Object.assign({
@@ -847,12 +787,8 @@ var RangeWidget = function RangeWidget(_ref) {
   }, sliderProps)));
 };
 
-var Element$5 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$a = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$9 = Form$a.Label,
-    Select = Form$a.Select;
+var Label$9 = Form$1.Label,
+    Select = Form$1.Select;
 var asNumber = utils.asNumber,
     guessType = utils.guessType;
 var nums = /*#__PURE__*/new Set(["number", "integer"]);
@@ -930,7 +866,7 @@ var SelectWidget = function SelectWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$9, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$5, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Select, {
@@ -948,7 +884,7 @@ var SelectWidget = function SelectWidget(_ref) {
     var value = _ref5.value,
         label = _ref5.label;
     var disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
-    return React.createElement(Element$5, {
+    return React.createElement(Element, {
       key: i,
       renderAs: "option",
       value: value,
@@ -957,12 +893,8 @@ var SelectWidget = function SelectWidget(_ref) {
   })), rawErrors);
 };
 
-var Element$6 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$b = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$a = Form$b.Label,
-    Textarea = Form$b.Textarea;
+var Label$a = Form$1.Label,
+    Textarea = Form$1.Textarea;
 
 var TextareaWidget = function TextareaWidget(_ref) {
   var id = _ref.id,
@@ -996,7 +928,7 @@ var TextareaWidget = function TextareaWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$a, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$6, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Textarea, {
@@ -1013,12 +945,8 @@ var TextareaWidget = function TextareaWidget(_ref) {
   }));
 };
 
-var Element$7 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$c = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$b = Form$c.Label,
-    Input$5 = Form$c.Input;
+var Label$b = Form$1.Label,
+    Input$5 = Form$1.Input;
 
 var TextWidget = function TextWidget(_ref) {
   var id = _ref.id,
@@ -1035,6 +963,9 @@ var TextWidget = function TextWidget(_ref) {
       options = _ref.options,
       schema = _ref.schema;
 
+  // PropTypes.checkPropTypes(Input.propTypes, {type: type || (schema.type as string)}, 'prop', 'Input', function() {
+  //   type = 'text';
+  // });
   var _onChange = function _onChange(_ref2) {
     var value = _ref2.target.value;
     return onChange(value === "" ? options.emptyValue : value);
@@ -1052,7 +983,7 @@ var TextWidget = function TextWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$b, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$7, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Input$5, {
@@ -1069,13 +1000,9 @@ var TextWidget = function TextWidget(_ref) {
   }));
 };
 
-var Element$8 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$d = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Control = Form$d.Control,
-    Label$c = Form$d.Label,
-    Input$6 = Form$d.Input;
+var Control = Form$1.Control,
+    Label$c = Form$1.Label,
+    Input$6 = Form$1.Input;
 
 var UpDownWidget = function UpDownWidget(_ref) {
   var id = _ref.id,
@@ -1109,7 +1036,7 @@ var UpDownWidget = function UpDownWidget(_ref) {
     fullwidth: true
   }, React.createElement(Label$c, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$8, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Input$6, {
@@ -1126,12 +1053,8 @@ var UpDownWidget = function UpDownWidget(_ref) {
   }));
 };
 
-var Element$9 = /*#__PURE__*/require('react-bulma-components/lib/components/element');
-
-var Form$e = /*#__PURE__*/require('react-bulma-components/lib/components/form');
-
-var Label$d = Form$e.Label,
-    Input$7 = Form$e.Input;
+var Label$d = Form$1.Label,
+    Input$7 = Form$1.Input;
 
 var URLWidget = function URLWidget(_ref) {
   var id = _ref.id,
@@ -1164,7 +1087,7 @@ var URLWidget = function URLWidget(_ref) {
 
   return React.createElement(React.Fragment, null, React.createElement(Label$d, {
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element$9, {
+  }, label || schema.title, required ? React.createElement(Element, {
     renderAs: "span",
     className: "required-mark"
   }, "*") : null), React.createElement(Input$7, {
@@ -1198,10 +1121,6 @@ var Widgets = {
   URLWidget: URLWidget
 };
 
-var Box$2 = /*#__PURE__*/require('react-bulma-components/lib/components/box');
-
-var Button$2 = /*#__PURE__*/require('react-bulma-components/lib/components/button');
-
 var getDefaultRegistry$1 = utils.getDefaultRegistry;
 
 var _getDefaultRegistry = /*#__PURE__*/getDefaultRegistry$1(),
@@ -1209,7 +1128,7 @@ var _getDefaultRegistry = /*#__PURE__*/getDefaultRegistry$1(),
     widgets = _getDefaultRegistry.widgets;
 
 var DefaultChildren = function DefaultChildren() {
-  return React.createElement(Box$2, null, React.createElement(Button$2, {
+  return React.createElement(Box, null, React.createElement(Button, {
     type: "submit"
   }, "Submit"));
 };
@@ -1224,8 +1143,8 @@ var Theme = {
   ErrorList: ErrorList
 };
 
-var BulmaForm = /*#__PURE__*/withTheme(Theme);
+var Form = /*#__PURE__*/withTheme(Theme);
 
-export default BulmaForm;
-export { BulmaForm, FieldTemplate, Fields, ObjectFieldTemplate, Theme, Widgets };
+export default Form;
+export { FieldTemplate, Fields, Form, ObjectFieldTemplate, Theme, Widgets };
 //# sourceMappingURL=bulma-css.esm.js.map

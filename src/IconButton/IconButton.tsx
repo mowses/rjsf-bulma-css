@@ -1,6 +1,5 @@
 import React from 'react';
-
-const Button = require('react-bulma-components/lib/components/button');
+import Button from 'react-bulma-components/lib/components/button';
 
 const mappings: any = {
   'remove': 'fa-remove',

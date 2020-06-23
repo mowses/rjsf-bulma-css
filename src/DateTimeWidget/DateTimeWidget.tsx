@@ -1,9 +1,9 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
+import Element from 'react-bulma-components/lib/components/element';
+import Form from 'react-bulma-components/lib/components/form';
 
-const Element = require('react-bulma-components/lib/components/element');
-const Form = require('react-bulma-components/lib/components/form');
 const { Label, Input } = Form;
 
 const { localToUTC, utcToLocal } = utils;
