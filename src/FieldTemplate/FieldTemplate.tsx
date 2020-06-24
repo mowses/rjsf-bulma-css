@@ -2,13 +2,14 @@ import React from "react";
 import { FieldTemplateProps } from "@rjsf/core";
 import Form from 'react-bulma-components/lib/components/form';
 import List from 'react-bulma-components/lib/components/list';
+import Notification from 'react-bulma-components/lib/components/notification';
 
 const FieldErrorListTemplate = (errors: any) => {
   if (!errors || !errors.length) return null;
 
   return <List renderAs="ul" className="error-list-field">
     {errors.map( (error: any, index: number) => (
-      <List.Item renderAs="li" key={index}>{error}</List.Item>
+      <Notification renderAs="li" key={index}>{error}</Notification>
     ))}
   </List>
 };

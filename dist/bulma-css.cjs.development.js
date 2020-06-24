@@ -13,6 +13,7 @@ var Button = _interopDefault(require('react-bulma-components/lib/components/butt
 var Icon = _interopDefault(require('react-bulma-components/lib/components/icon'));
 var Card = _interopDefault(require('react-bulma-components/lib/components/card'));
 var List = _interopDefault(require('react-bulma-components/lib/components/list'));
+var Notification = _interopDefault(require('react-bulma-components/lib/components/notification'));
 var MultiSchemaField = _interopDefault(require('@rjsf/core/lib/components/fields/MultiSchemaField'));
 var Form$1 = _interopDefault(require('react-bulma-components/lib/components/form'));
 var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
@@ -227,7 +228,7 @@ var ErrorList = function ErrorList(_ref) {
     renderAs: "ul",
     className: "error-list-items"
   }, errors.map(function (error, i) {
-    return React.createElement(List.Item, {
+    return React.createElement(Notification, {
       renderAs: "li",
       key: i
     }, error.stack);
@@ -307,7 +308,7 @@ var FieldErrorListTemplate = function FieldErrorListTemplate(errors) {
     renderAs: "ul",
     className: "error-list-field"
   }, errors.map(function (error, index) {
-    return React.createElement(List.Item, {
+    return React.createElement(Notification, {
       renderAs: "li",
       key: index
     }, error);
@@ -619,13 +620,11 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
       required = _ref.required,
       readonly = _ref.readonly,
       disabled = _ref.disabled,
-      label = _ref.label,
       value = _ref.value,
       onChange = _ref.onChange,
       onBlur = _ref.onBlur,
       onFocus = _ref.onFocus,
-      autofocus = _ref.autofocus,
-      schema = _ref.schema;
+      autofocus = _ref.autofocus;
 
   var _onChange = function _onChange(_ref2) {
     var value = _ref2.target.value;
@@ -642,10 +641,7 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
-    className: required ? 'required' : '',
-    htmlFor: id
-  }, label || schema.title) : null, React.createElement(Form$1.Input, {
+  return React.createElement(Form$1.Input, {
     type: "datetime-local",
     id: id,
     autoFocus: autofocus,
@@ -656,7 +652,7 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
     onChange: _onChange,
     onBlur: _onBlur,
     onFocus: _onFocus
-  }));
+  });
 };
 
 var EmailWidget = function EmailWidget(_ref) {

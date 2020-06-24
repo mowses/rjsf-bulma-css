@@ -2,6 +2,7 @@ import React from 'react';
 import { ErrorListProps } from '@rjsf/core';
 import Card from 'react-bulma-components/lib/components/card';
 import List from 'react-bulma-components/lib/components/list';
+import Notification from 'react-bulma-components/lib/components/notification';
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <Card className="error-list-card">
@@ -12,9 +13,7 @@ const ErrorList = ({ errors }: ErrorListProps) => (
       <List renderAs="ul" className="error-list-items">
         {errors.map((error, i: number) => {
           return (
-            <List.Item renderAs="li" key={i}>
-              {error.stack}
-            </List.Item>
+            <Notification renderAs="li" key={i}>{error.stack}</Notification>
           );
         })}
       </List>

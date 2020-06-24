@@ -10,13 +10,11 @@ const DateTimeWidget = ({
   required,
   readonly,
   disabled,
-  label,
   value,
   onChange,
   onBlur,
   onFocus,
   autofocus,
-  schema,
 }: WidgetProps) => {
   const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(localToUTC(value));
@@ -27,24 +25,18 @@ const DateTimeWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
   
   return (
-    <>
-      {(label || schema.title) ? (
-        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label || schema.title}</Form.Label>
-      ) : null}
-
-      <Form.Input
-        type="datetime-local"
-        id={id}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        name={name}
-        value={utcToLocal(value)}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-    </>
+    <Form.Input
+      type="datetime-local"
+      id={id}
+      autoFocus={autofocus}
+      required={required}
+      disabled={disabled || readonly}
+      name={name}
+      value={utcToLocal(value)}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 };
 
