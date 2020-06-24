@@ -13,9 +13,11 @@ var Button = _interopDefault(require('react-bulma-components/lib/components/butt
 var Icon = _interopDefault(require('react-bulma-components/lib/components/icon'));
 var Card = _interopDefault(require('react-bulma-components/lib/components/card'));
 var List = _interopDefault(require('react-bulma-components/lib/components/list'));
+var MultiSchemaField = _interopDefault(require('@rjsf/core/lib/components/fields/MultiSchemaField'));
+var Form$1 = _interopDefault(require('react-bulma-components/lib/components/form'));
 var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
 var Heading = _interopDefault(require('react-bulma-components/lib/components/heading'));
-var Form$1 = _interopDefault(require('react-bulma-components/lib/components/form'));
+var PropTypes = _interopDefault(require('prop-types'));
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -33,6 +35,12 @@ function _extends() {
   };
 
   return _extends.apply(this, arguments);
+}
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  subClass.__proto__ = superClass;
 }
 
 function _objectDestructuringEmpty(obj) {
@@ -226,6 +234,28 @@ var ErrorList = function ErrorList(_ref) {
   }))));
 };
 
+var AnyOfField = /*#__PURE__*/function (_MultiSchemaField) {
+  _inheritsLoose(AnyOfField, _MultiSchemaField);
+
+  function AnyOfField() {
+    return _MultiSchemaField.apply(this, arguments) || this;
+  }
+
+  var _proto = AnyOfField.prototype;
+
+  _proto.render = function render() {
+    var field = _MultiSchemaField.prototype.render.apply(this, arguments);
+
+    return React.createElement(Form$1.Field, {
+      kind: "group"
+    }, React.createElement(Form$1.Control, null, field.props.children[0].props.children), React.createElement(Form$1.Control, {
+      fullwidth: true
+    }, field.props.children[1]));
+  };
+
+  return AnyOfField;
+}(MultiSchemaField);
+
 var DescriptionField = function DescriptionField(_ref) {
   var description = _ref.description;
   if (!description) return null;
@@ -235,6 +265,28 @@ var DescriptionField = function DescriptionField(_ref) {
   }, description);
 };
 
+var OneOfField = /*#__PURE__*/function (_MultiSchemaField) {
+  _inheritsLoose(OneOfField, _MultiSchemaField);
+
+  function OneOfField() {
+    return _MultiSchemaField.apply(this, arguments) || this;
+  }
+
+  var _proto = OneOfField.prototype;
+
+  _proto.render = function render() {
+    var field = _MultiSchemaField.prototype.render.apply(this, arguments);
+
+    return React.createElement(Form$1.Field, {
+      kind: "group"
+    }, React.createElement(Form$1.Control, null, field.props.children[0].props.children), React.createElement(Form$1.Control, {
+      fullwidth: true
+    }, field.props.children[1]));
+  };
+
+  return OneOfField;
+}(MultiSchemaField);
+
 var TitleField = function TitleField(_ref) {
   var title = _ref.title;
   return React.createElement(Box, null, React.createElement(Heading, {
@@ -243,11 +295,13 @@ var TitleField = function TitleField(_ref) {
 };
 
 var Fields = {
+  AnyOfField: AnyOfField,
   DescriptionField: DescriptionField,
+  OneOfField: OneOfField,
   TitleField: TitleField
 };
 
-var BulmaFieldErrorListTemplate = function BulmaFieldErrorListTemplate(errors) {
+var FieldErrorListTemplate = function FieldErrorListTemplate(errors) {
   if (!errors || !errors.length) return null;
   return React.createElement(List, {
     renderAs: "ul",
@@ -258,6 +312,10 @@ var BulmaFieldErrorListTemplate = function BulmaFieldErrorListTemplate(errors) {
       key: index
     }, error);
   }));
+};
+
+var FieldIsBool = function FieldIsBool(schema, uiSchema) {
+  return schema && schema['type'] == 'boolean' || uiSchema && ['radio', 'checkbox'].includes('' + uiSchema['ui:widget']);
 };
 
 var FieldTemplate = function FieldTemplate(_ref) {
@@ -271,13 +329,15 @@ var FieldTemplate = function FieldTemplate(_ref) {
       required = _ref.required,
       _ref$rawErrors = _ref.rawErrors,
       rawErrors = _ref$rawErrors === void 0 ? [] : _ref$rawErrors,
-      rawHelp = _ref.rawHelp;
+      rawHelp = _ref.rawHelp,
+      schema = _ref.schema,
+      uiSchema = _ref.uiSchema;
   return React.createElement(Form$1.Field, {
     className: classNames
   }, displayLabel && label ? React.createElement(Form$1.Label, {
     className: required ? 'required' : '',
-    htmlFor: id
-  }, label) : null, description, children, BulmaFieldErrorListTemplate(rawErrors), React.createElement(Form$1.Help, {
+    htmlFor: FieldIsBool(schema, uiSchema) ? null : id
+  }, label) : null, description, React.createElement(Form$1.Control, null, children), FieldErrorListTemplate(rawErrors), React.createElement(Form$1.Help, {
     renderAs: "div"
   }, rawHelp ? rawHelp : help));
 };
@@ -298,56 +358,86 @@ var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
   })));
 };
 
-var Checkbox = Form$1.Checkbox,
-    Label = Form$1.Label;
+function schemaRequiresTrueValue(schema) {
+  // Check if const is a truthy value
+  if (schema["const"]) {
+    return true;
+  } // Check if an enum has a single value of true
 
-var CheckboxWidget = function CheckboxWidget(props) {
-  var id = props.id,
+
+  if (schema["enum"] && schema["enum"].length === 1 && schema["enum"][0] === true) {
+    return true;
+  } // If anyOf has a single value, evaluate the subschema
+
+
+  if (schema.anyOf && schema.anyOf.length === 1) {
+    return schemaRequiresTrueValue(schema.anyOf[0]);
+  } // If oneOf has a single value, evaluate the subschema
+
+
+  if (schema.oneOf && schema.oneOf.length === 1) {
+    return schemaRequiresTrueValue(schema.oneOf[0]);
+  } // Evaluate each subschema in allOf, to see if one of them requires a true
+  // value
+
+
+  if (schema.allOf) {
+    return schema.allOf.some(schemaRequiresTrueValue);
+  }
+}
+
+function CheckboxWidget(props) {
+  var schema = props.schema,
+      id = props.id,
       value = props.value,
-      required = props.required,
       disabled = props.disabled,
       readonly = props.readonly,
       label = props.label,
       autofocus = props.autofocus,
-      onChange = props.onChange,
       onBlur = props.onBlur,
-      onFocus = props.onFocus;
+      onFocus = props.onFocus,
+      _onChange = props.onChange; // Because an unchecked checkbox will cause html5 validation to fail, only add
+  // the "required" attribute if the field value must be "true", due to the
+  // "const" or "enum" keywords
 
-  var _onChange = function _onChange(_ref, checked) {
-    _objectDestructuringEmpty(_ref);
-
-    return onChange(checked);
-  };
-
-  var _onBlur = function _onBlur(_ref2) {
-    var value = _ref2.target.value;
-    return onBlur(id, value);
-  };
-
-  var _onFocus = function _onFocus(_ref3) {
-    var value = _ref3.target.value;
-    return onFocus(id, value);
-  };
-
-  return React.createElement(Label, {
-    className: "checkbox"
-  }, React.createElement(Checkbox, {
+  var required = schemaRequiresTrueValue(schema);
+  return React.createElement(Form$1.Checkbox, {
     id: id,
+    className: "" + (disabled || readonly ? "disabled" : ""),
     checked: typeof value === "undefined" ? false : value,
     required: required,
     disabled: disabled || readonly,
     autoFocus: autofocus,
-    onChange: _onChange,
-    onBlur: _onBlur,
-    onFocus: _onFocus
-  }), label);
+    onChange: function onChange(event) {
+      return _onChange(event.target.checked);
+    },
+    onBlur: onBlur && function (event) {
+      return onBlur(id, event.target.checked);
+    },
+    onFocus: onFocus && function (event) {
+      return onFocus(id, event.target.checked);
+    }
+  }, label);
+}
+
+CheckboxWidget.defaultProps = {
+  autofocus: false
 };
 
-var Checkbox$1 = Form$1.Checkbox,
-    Field = Form$1.Field,
-    Label$1 = Form$1.Label;
+{
+  CheckboxWidget.propTypes = {
+    schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
+    value: PropTypes.bool,
+    required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
+    autofocus: PropTypes.bool,
+    onChange: PropTypes.func
+  };
+}
 
-var selectValue = function selectValue(value, selected, all) {
+function selectValue(value, selected, all) {
   var at = all.indexOf(value);
   var updated = selected.slice(0, at).concat(value, selected.slice(at)); // As inserting values at predefined index positions doesn't work with empty
   // arrays, we need to reorder the updated selection to match the initial order
@@ -355,87 +445,79 @@ var selectValue = function selectValue(value, selected, all) {
   return updated.sort(function (a, b) {
     return all.indexOf(a) > all.indexOf(b);
   });
-};
+}
 
-var deselectValue = function deselectValue(value, selected) {
+function deselectValue(value, selected) {
   return selected.filter(function (v) {
     return v !== value;
   });
-};
+}
 
-var CheckboxesWidget = function CheckboxesWidget(_ref) {
-  var schema = _ref.schema,
-      label = _ref.label,
-      id = _ref.id,
-      disabled = _ref.disabled,
-      options = _ref.options,
-      value = _ref.value,
-      autofocus = _ref.autofocus,
-      readonly = _ref.readonly,
-      required = _ref.required,
-      onChange = _ref.onChange,
-      onBlur = _ref.onBlur,
-      onFocus = _ref.onFocus;
+function CheckboxesWidget(props) {
+  var id = props.id,
+      disabled = props.disabled,
+      options = props.options,
+      value = props.value,
+      autofocus = props.autofocus,
+      readonly = props.readonly,
+      _onChange = props.onChange;
   var enumOptions = options.enumOptions,
       enumDisabled = options.enumDisabled,
       inline = options.inline;
-
-  var _onChange = function _onChange(option) {
-    return function (_ref2) {
-      var checked = _ref2.target.checked;
-      var all = enumOptions.map(function (_ref3) {
-        var value = _ref3.value;
-        return value;
-      });
-
-      if (checked) {
-        onChange(selectValue(option.value, value, all));
-      } else {
-        onChange(deselectValue(option.value, value));
-      }
-    };
-  };
-
-  var _onBlur = function _onBlur(_ref4) {
-    var value = _ref4.target.value;
-    return onBlur(id, value);
-  };
-
-  var _onFocus = function _onFocus(_ref5) {
-    var value = _ref5.target.value;
-    return onFocus(id, value);
-  };
-
-  return React.createElement(React.Fragment, null, React.createElement(Label$1, {
-    htmlFor: id
-  }, label || schema.title, required ? React.createElement("span", {
-    className: "required-mark"
-  }, "*") : null), React.createElement(Field, {
-    kind: "group"
+  return React.createElement(Element, {
+    className: "checkboxes",
+    id: id
   }, enumOptions.map(function (option, index) {
     var checked = value.indexOf(option.value) !== -1;
     var itemDisabled = enumDisabled && enumDisabled.indexOf(option.value) != -1;
-    var checkbox = React.createElement(Checkbox$1, {
+    var disabledCls = disabled || itemDisabled || readonly ? "disabled" : "";
+    return React.createElement(Form$1.Checkbox, {
+      key: index,
+      className: (inline ? 'checkbox-inline' : 'checkbox-block') + (" " + disabledCls),
       id: id + "_" + index,
       checked: checked,
       disabled: disabled || itemDisabled || readonly,
       autoFocus: autofocus && index === 0,
-      onChange: _onChange(option),
-      onBlur: _onBlur,
-      onFocus: _onFocus
-    });
-    return inline ? React.createElement(Label$1, {
-      htmlFor: id + "_" + index,
-      key: index
-    }, option.label, checkbox) : React.createElement(Label$1, {
-      htmlFor: id + "_" + index,
-      key: index
-    }, option.label, checkbox);
-  })));
+      onChange: function onChange(event) {
+        var all = enumOptions.map(function (_ref) {
+          var value = _ref.value;
+          return value;
+        });
+
+        if (event.target.checked) {
+          _onChange(selectValue(option.value, value, all));
+        } else {
+          _onChange(deselectValue(option.value, value));
+        }
+      }
+    }, option.label);
+  }));
+}
+
+CheckboxesWidget.defaultProps = {
+  autofocus: false,
+  options: {
+    inline: false
+  }
 };
 
-var Label$2 = Form$1.Label,
-    Input = Form$1.Input;
+{
+  CheckboxesWidget.propTypes = {
+    schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
+    options: /*#__PURE__*/PropTypes.shape({
+      enumOptions: PropTypes.array,
+      inline: PropTypes.bool
+    }).isRequired,
+    value: PropTypes.any,
+    required: PropTypes.bool,
+    readonly: PropTypes.bool,
+    disabled: PropTypes.bool,
+    multiple: PropTypes.bool,
+    autofocus: PropTypes.bool,
+    onChange: PropTypes.func
+  };
+}
 
 var ColorWidget = function ColorWidget(_ref) {
   var id = _ref.id,
@@ -466,12 +548,10 @@ var ColorWidget = function ColorWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$2, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input, {
+  }, label || schema.title) : null, React.createElement(Form$1.Input, {
     type: "color",
     id: id,
     autoFocus: autofocus,
@@ -484,9 +564,6 @@ var ColorWidget = function ColorWidget(_ref) {
     onFocus: _onFocus
   }));
 };
-
-var Label$3 = Form$1.Label,
-    Input$1 = Form$1.Input;
 
 var DateWidget = function DateWidget(_ref) {
   var id = _ref.id,
@@ -517,12 +594,10 @@ var DateWidget = function DateWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$3, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input$1, {
+  }, label || schema.title) : null, React.createElement(Form$1.Input, {
     type: "date",
     id: id,
     autoFocus: autofocus,
@@ -536,8 +611,6 @@ var DateWidget = function DateWidget(_ref) {
   }));
 };
 
-var Label$4 = Form$1.Label,
-    Input$2 = Form$1.Input;
 var localToUTC = core.utils.localToUTC,
     utcToLocal = core.utils.utcToLocal;
 
@@ -569,12 +642,10 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$4, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input$2, {
+  }, label || schema.title) : null, React.createElement(Form$1.Input, {
     type: "datetime-local",
     id: id,
     autoFocus: autofocus,
@@ -587,9 +658,6 @@ var DateTimeWidget = function DateTimeWidget(_ref) {
     onFocus: _onFocus
   }));
 };
-
-var Label$5 = Form$1.Label,
-    Input$3 = Form$1.Input;
 
 var EmailWidget = function EmailWidget(_ref) {
   var id = _ref.id,
@@ -620,12 +688,10 @@ var EmailWidget = function EmailWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$5, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input$3, {
+  }, label || schema.title) : null, React.createElement(Form$1.Input, {
     type: "email",
     id: id,
     autoFocus: autofocus,
@@ -639,7 +705,7 @@ var EmailWidget = function EmailWidget(_ref) {
   }));
 };
 
-var Input$4 = Form$1.Input;
+var Input = Form$1.Input;
 
 var PasswordWidget = function PasswordWidget(_ref) {
   var id = _ref.id,
@@ -672,7 +738,7 @@ var PasswordWidget = function PasswordWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(Input$4, {
+  return React.createElement(Input, {
     type: "password",
     id: id,
     label: label || schema.title,
@@ -686,10 +752,6 @@ var PasswordWidget = function PasswordWidget(_ref) {
     onChange: _onChange
   });
 };
-
-var Field$1 = Form$1.Field,
-    Label$6 = Form$1.Label,
-    Radio = Form$1.Radio;
 
 var RadioWidget = function RadioWidget(_ref) {
   var id = _ref.id,
@@ -722,18 +784,17 @@ var RadioWidget = function RadioWidget(_ref) {
   };
 
   var row = options ? options.inline : false;
-  return React.createElement(React.Fragment, null, React.createElement(Label$6, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement("span", {
-    className: "required-mark"
-  }, "*") : null), React.createElement(Field$1, {
+  }, label || schema.title) : null, React.createElement(Form$1.Field, {
     kind: "group",
     horizontal: row
   }, enumOptions.map(function (option, i) {
     var itemDisabled = enumDisabled && enumDisabled.indexOf(option.value) != -1;
-    var radio = React.createElement(Label$6, {
+    var radio = React.createElement(Form$1.Label, {
       htmlFor: id + "_" + i
-    }, React.createElement(Radio, {
+    }, React.createElement(Form$1.Radio, {
       key: i,
       value: "" + option.value,
       disabled: disabled || itemDisabled || readonly,
@@ -745,7 +806,6 @@ var RadioWidget = function RadioWidget(_ref) {
   })));
 };
 
-var Label$7 = Form$1.Label;
 var rangeSpec = core.utils.rangeSpec;
 
 var RangeWidget = function RangeWidget(_ref) {
@@ -782,12 +842,10 @@ var RangeWidget = function RangeWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$7, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement("input", Object.assign({
+  }, label || schema.title) : null, React.createElement(Form$1.Input, Object.assign({
     type: "range",
     className: "slider is-fullwidth",
     disabled: disabled || readonly,
@@ -797,8 +855,6 @@ var RangeWidget = function RangeWidget(_ref) {
   }, sliderProps)));
 };
 
-var Label$8 = Form$1.Label,
-    Select = Form$1.Select;
 var asNumber = core.utils.asNumber,
     guessType = core.utils.guessType;
 var nums = /*#__PURE__*/new Set(["number", "integer"]);
@@ -807,7 +863,7 @@ var nums = /*#__PURE__*/new Set(["number", "integer"]);
  * always retrieved as strings.
  */
 
-var processValue = function processValue(schema, value) {
+function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   var type = schema.type,
       items = schema.items;
@@ -837,74 +893,95 @@ var processValue = function processValue(schema, value) {
   }
 
   return value;
-};
+}
 
-var SelectWidget = function SelectWidget(_ref) {
-  var schema = _ref.schema,
-      id = _ref.id,
-      options = _ref.options,
-      label = _ref.label,
-      required = _ref.required,
-      disabled = _ref.disabled,
-      readonly = _ref.readonly,
-      value = _ref.value,
-      multiple = _ref.multiple,
-      autofocus = _ref.autofocus,
-      onChange = _ref.onChange,
-      onBlur = _ref.onBlur,
-      onFocus = _ref.onFocus,
-      _ref$rawErrors = _ref.rawErrors,
-      rawErrors = _ref$rawErrors === void 0 ? [] : _ref$rawErrors;
+function getValue(event, multiple) {
+  if (multiple) {
+    return [].slice.call(event.target.options).filter(function (o) {
+      return o.selected;
+    }).map(function (o) {
+      return o.value;
+    });
+  } else {
+    return event.target.value;
+  }
+}
+
+function SelectWidget(props) {
+  var schema = props.schema,
+      id = props.id,
+      options = props.options,
+      value = props.value,
+      required = props.required,
+      disabled = props.disabled,
+      readonly = props.readonly,
+      multiple = props.multiple,
+      autofocus = props.autofocus,
+      _onChange = props.onChange,
+      onBlur = props.onBlur,
+      onFocus = props.onFocus,
+      placeholder = props.placeholder;
   var enumOptions = options.enumOptions,
       enumDisabled = options.enumDisabled;
   var emptyValue = multiple ? [] : "";
-
-  var _onChange = function _onChange(_ref2) {
-    var value = _ref2.target.value;
-    return onChange(processValue(schema, value));
-  };
-
-  var _onBlur = function _onBlur(_ref3) {
-    var value = _ref3.target.value;
-    return onBlur(id, processValue(schema, value));
-  };
-
-  var _onFocus = function _onFocus(_ref4) {
-    var value = _ref4.target.value;
-    return onFocus(id, processValue(schema, value));
-  };
-
-  return React.createElement(React.Fragment, null, React.createElement(Label$8, {
-    htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Select, {
+  return React.createElement(Form$1.Select, {
     id: id,
-    name: name,
+    multiple: multiple,
+    className: "form-control",
     value: typeof value === "undefined" ? emptyValue : value,
     required: required,
     disabled: disabled || readonly,
     autoFocus: autofocus,
-    onChange: _onChange,
-    onBlur: _onBlur,
-    onFocus: _onFocus,
-    multiple: typeof multiple === "undefined" ? false : multiple
-  }, enumOptions.map(function (_ref5, i) {
-    var value = _ref5.value,
-        label = _ref5.label;
+    onBlur: onBlur && function (event) {
+      var newValue = getValue(event, multiple);
+      onBlur(id, processValue(schema, newValue));
+    },
+    onFocus: onFocus && function (event) {
+      var newValue = getValue(event, multiple);
+      onFocus(id, processValue(schema, newValue));
+    },
+    onChange: function onChange(event) {
+      var newValue = getValue(event, multiple);
+
+      _onChange(processValue(schema, newValue));
+    }
+  }, !multiple && schema["default"] === undefined && React.createElement("option", {
+    value: ""
+  }, placeholder), enumOptions.map(function (_ref, i) {
+    var value = _ref.value,
+        label = _ref.label;
     var disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
     return React.createElement(Element, {
-      key: i,
       renderAs: "option",
+      key: i,
       value: value,
       disabled: disabled
     }, label);
-  })), rawErrors);
+  }));
+}
+
+SelectWidget.defaultProps = {
+  autofocus: false
 };
 
-var Label$9 = Form$1.Label,
-    Textarea = Form$1.Textarea;
+{
+  SelectWidget.propTypes = {
+    schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
+    options: /*#__PURE__*/PropTypes.shape({
+      enumOptions: PropTypes.array
+    }).isRequired,
+    value: PropTypes.any,
+    required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
+    multiple: PropTypes.bool,
+    autofocus: PropTypes.bool,
+    onChange: PropTypes.func,
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func
+  };
+}
 
 var TextareaWidget = function TextareaWidget(_ref) {
   var id = _ref.id,
@@ -936,12 +1013,10 @@ var TextareaWidget = function TextareaWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$9, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Textarea, {
+  }, label || schema.title) : null, React.createElement(Form$1.Textarea, {
     id: id,
     required: required,
     placeholder: placeholder,
@@ -954,8 +1029,6 @@ var TextareaWidget = function TextareaWidget(_ref) {
     onFocus: _onFocus
   }));
 };
-
-var Input$5 = Form$1.Input;
 
 var TextWidget = function TextWidget(_ref) {
   var id = _ref.id,
@@ -991,7 +1064,7 @@ var TextWidget = function TextWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(Input$5, {
+  return React.createElement(Form$1.Input, {
     type: input_type,
     id: id,
     autoFocus: autofocus,
@@ -1004,10 +1077,6 @@ var TextWidget = function TextWidget(_ref) {
     onFocus: _onFocus
   });
 };
-
-var Control = Form$1.Control,
-    Label$a = Form$1.Label,
-    Input$6 = Form$1.Input;
 
 var UpDownWidget = function UpDownWidget(_ref) {
   var id = _ref.id,
@@ -1037,14 +1106,10 @@ var UpDownWidget = function UpDownWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(Control, {
-    fullwidth: true
-  }, React.createElement(Label$a, {
+  return React.createElement(Form$1.Field, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input$6, {
+  }, label || schema.title) : null, React.createElement(Form$1.Input, {
     type: "number",
     id: id,
     autoFocus: autofocus,
@@ -1057,9 +1122,6 @@ var UpDownWidget = function UpDownWidget(_ref) {
     onFocus: _onFocus
   }));
 };
-
-var Label$b = Form$1.Label,
-    Input$7 = Form$1.Input;
 
 var URLWidget = function URLWidget(_ref) {
   var id = _ref.id,
@@ -1090,12 +1152,10 @@ var URLWidget = function URLWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, React.createElement(Label$b, {
+  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
+    className: required ? 'required' : '',
     htmlFor: id
-  }, label || schema.title, required ? React.createElement(Element, {
-    renderAs: "span",
-    className: "required-mark"
-  }, "*") : null), React.createElement(Input$7, {
+  }, label || schema.title) : null, React.createElement(Form$1.Input, {
     type: "url",
     id: id,
     autoFocus: autofocus,

@@ -2,8 +2,6 @@ import React from "react";
 import { WidgetProps } from "@rjsf/core";
 import Form from 'react-bulma-components/lib/components/form';
 
-const { Field, Label, Radio } = Form;
-
 const RadioWidget = ({
   id,
   schema,
@@ -30,8 +28,11 @@ const RadioWidget = ({
 
   return (
     <>
-      <Label htmlFor={id}>{label || schema.title}{required ? <span className="required-mark">*</span> : null}</Label>
-      <Field
+      {(label || schema.title) ? (
+        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label || schema.title}</Form.Label>
+      ) : null}
+
+      <Form.Field
         kind="group"
         horizontal={row}>
         {(enumOptions as any).map((option: any, i: number) => {
@@ -39,8 +40,8 @@ const RadioWidget = ({
             enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
 
           const radio = (
-            <Label htmlFor={`${id}_${i}`}>
-              <Radio
+            <Form.Label htmlFor={`${id}_${i}`}>
+              <Form.Radio
                 key={i}
                 value={`${option.value}`}
                 disabled={disabled || itemDisabled || readonly}
@@ -49,12 +50,12 @@ const RadioWidget = ({
                 onFocus={_onFocus}
               />
               {option.label}
-            </Label>
+            </Form.Label>
           );
 
           return radio;
         })}
-      </Field>
+      </Form.Field>
     </>
   );
 };

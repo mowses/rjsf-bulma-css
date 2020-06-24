@@ -1,9 +1,6 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/core";
-import Element from 'react-bulma-components/lib/components/element';
 import Form from 'react-bulma-components/lib/components/form';
-
-const { Label, Textarea } = Form;
 
 type CustomWidgetProps = WidgetProps & {
   options: any;
@@ -36,8 +33,10 @@ const TextareaWidget = ({
 
   return (
     <>
-      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
-      <Textarea
+      {(label || schema.title) ? (
+        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label || schema.title}</Form.Label>
+      ) : null}
+      <Form.Textarea
         id={id}
         required={required}
         placeholder={placeholder}

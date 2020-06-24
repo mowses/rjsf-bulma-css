@@ -2,8 +2,6 @@ import React from "react";
 import { WidgetProps } from "@rjsf/core";
 import Form from 'react-bulma-components/lib/components/form';
 
-const { Input } = Form;
-
 const TextWidget = ({
   id,
   required,
@@ -45,7 +43,7 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <Input
+    <Form.Input
       type={input_type}
       id={id}
       autoFocus={autofocus}

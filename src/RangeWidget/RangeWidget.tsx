@@ -1,9 +1,7 @@
 import React from "react";
 import { WidgetProps, utils } from "@rjsf/core";
-import Element from 'react-bulma-components/lib/components/element';
 import Form from 'react-bulma-components/lib/components/form';
 
-const { Label } = Form;
 const { rangeSpec } = utils;
 
 const RangeWidget = ({
@@ -31,8 +29,10 @@ const RangeWidget = ({
 
   return (
     <>
-      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
-      <input
+      {(label || schema.title) ? (
+        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label || schema.title}</Form.Label>
+      ) : null}
+      <Form.Input
         type="range"
         className="slider is-fullwidth"
         disabled={disabled || readonly}

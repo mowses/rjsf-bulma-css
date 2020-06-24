@@ -1,10 +1,7 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
-import Element from 'react-bulma-components/lib/components/element';
 import Form from 'react-bulma-components/lib/components/form';
-
-const { Label, Input } = Form;
 
 const { localToUTC, utcToLocal } = utils;
 
@@ -19,7 +16,7 @@ const DateTimeWidget = ({
   onBlur,
   onFocus,
   autofocus,
-  schema
+  schema,
 }: WidgetProps) => {
   const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(localToUTC(value));
@@ -31,8 +28,11 @@ const DateTimeWidget = ({
   
   return (
     <>
-      <Label htmlFor={id}>{label || schema.title}{required ? <Element renderAs="span" className="required-mark">*</Element> : null}</Label>
-      <Input
+      {(label || schema.title) ? (
+        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label || schema.title}</Form.Label>
+      ) : null}
+
+      <Form.Input
         type="datetime-local"
         id={id}
         autoFocus={autofocus}
