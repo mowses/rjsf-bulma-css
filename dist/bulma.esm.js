@@ -983,13 +983,11 @@ var TextareaWidget = function TextareaWidget(_ref) {
       required = _ref.required,
       disabled = _ref.disabled,
       autofocus = _ref.autofocus,
-      label = _ref.label,
       readonly = _ref.readonly,
       onBlur = _ref.onBlur,
       onFocus = _ref.onFocus,
       onChange = _ref.onChange,
-      options = _ref.options,
-      schema = _ref.schema;
+      options = _ref.options;
 
   var _onChange = function _onChange(_ref2) {
     var value = _ref2.target.value;
@@ -1006,10 +1004,7 @@ var TextareaWidget = function TextareaWidget(_ref) {
     return onFocus(id, value);
   };
 
-  return React.createElement(React.Fragment, null, label || schema.title ? React.createElement(Form$1.Label, {
-    className: required ? 'required' : '',
-    htmlFor: id
-  }, label || schema.title) : null, React.createElement(Form$1.Textarea, {
+  return React.createElement(Form$1.Textarea, {
     id: id,
     required: required,
     placeholder: placeholder,
@@ -1020,7 +1015,7 @@ var TextareaWidget = function TextareaWidget(_ref) {
     onChange: _onChange,
     onBlur: _onBlur,
     onFocus: _onFocus
-  }));
+  });
 };
 
 var TextWidget = function TextWidget(_ref) {
@@ -1206,4 +1201,4 @@ var Form = /*#__PURE__*/withTheme(Theme);
 
 export default Form;
 export { FieldTemplate, Fields, Form, ObjectFieldTemplate, Theme, Widgets };
-//# sourceMappingURL=bulma-css.esm.js.map
+//# sourceMappingURL=bulma.esm.js.map

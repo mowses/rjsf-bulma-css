@@ -13,13 +13,11 @@ const TextareaWidget = ({
   required,
   disabled,
   autofocus,
-  label,
   readonly,
   onBlur,
   onFocus,
   onChange,
   options,
-  schema,
 }: CustomWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -32,23 +30,18 @@ const TextareaWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <>
-      {(label || schema.title) ? (
-        <Form.Label className={required ? 'required' : ''} htmlFor={id}>{label || schema.title}</Form.Label>
-      ) : null}
-      <Form.Textarea
-        id={id}
-        required={required}
-        placeholder={placeholder}
-        disabled={disabled || readonly}
-        value={value}
-        autoFocus={autofocus}
-        rows={options.rows || 5}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-    </>
+    <Form.Textarea
+      id={id}
+      required={required}
+      placeholder={placeholder}
+      disabled={disabled || readonly}
+      value={value}
+      autoFocus={autofocus}
+      rows={options.rows || 5}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 };
 
