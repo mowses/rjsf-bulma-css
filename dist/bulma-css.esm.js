@@ -5,13 +5,13 @@ import Columns from 'react-bulma-components/lib/components/columns';
 import Level from 'react-bulma-components/lib/components/level';
 import Button from 'react-bulma-components/lib/components/button';
 import Icon from 'react-bulma-components/lib/components/icon';
-import Card from 'react-bulma-components/lib/components/card';
 import List from 'react-bulma-components/lib/components/list';
 import Notification from 'react-bulma-components/lib/components/notification';
 import MultiSchemaField from '@rjsf/core/lib/components/fields/MultiSchemaField';
 import Form$1 from 'react-bulma-components/lib/components/form';
 import Element from 'react-bulma-components/lib/components/element';
 import Heading from 'react-bulma-components/lib/components/heading';
+import Card from 'react-bulma-components/lib/components/card';
 import PropTypes from 'prop-types';
 
 function _extends() {
@@ -216,9 +216,7 @@ var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(p
 
 var ErrorList = function ErrorList(_ref) {
   var errors = _ref.errors;
-  return React.createElement(Card, {
-    className: "error-list-card"
-  }, React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, "Errors")), React.createElement(Card.Content, null, React.createElement(List, {
+  return React.createElement(List, {
     renderAs: "ul",
     className: "error-list-items"
   }, errors.map(function (error, i) {
@@ -226,7 +224,7 @@ var ErrorList = function ErrorList(_ref) {
       renderAs: "li",
       key: i
     }, error.stack);
-  }))));
+  }));
 };
 
 var AnyOfField = /*#__PURE__*/function (_MultiSchemaField) {
@@ -327,10 +325,15 @@ var FieldTemplate = function FieldTemplate(_ref) {
       rawHelp = _ref.rawHelp,
       schema = _ref.schema,
       uiSchema = _ref.uiSchema;
+  var classnames = classNames;
+
+  if (required) {
+    classnames += ' required';
+  }
+
   return React.createElement(Form$1.Field, {
-    className: classNames
+    className: classnames
   }, displayLabel && label ? React.createElement(Form$1.Label, {
-    className: required ? 'required' : '',
     htmlFor: FieldIsBool(schema, uiSchema) ? null : id
   }, label) : null, description, React.createElement(Form$1.Control, null, children), FieldErrorListTemplate(rawErrors), React.createElement(Form$1.Help, {
     renderAs: "div"
@@ -348,7 +351,7 @@ var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
   }, description) : null, properties.map(function (element, index) {
     return React.createElement(Form$1.Field, {
       key: index,
-      className: "field-row"
+      className: "field-row " + (element.disabled ? 'disabled' : '')
     }, element.content);
   })));
 };

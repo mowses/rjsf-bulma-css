@@ -33,10 +33,15 @@ const FieldTemplate = ({
   uiSchema,
 }: FieldTemplateProps) => {
   
+  let classnames = classNames;
+  if (required) {
+    classnames += ' required';
+  }
+
   return (
-    <Form.Field className={classNames}>
+    <Form.Field className={classnames}>
       {displayLabel && label ? (
-        <Form.Label className={required ? 'required' : ''} htmlFor={FieldIsBool(schema, uiSchema) ? null : id}>{label}</Form.Label>
+        <Form.Label htmlFor={FieldIsBool(schema, uiSchema) ? null : id}>{label}</Form.Label>
       ) : null}
       {description}
       
