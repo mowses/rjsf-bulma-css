@@ -1,11 +1,11 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/mowses/rjsf-bulma-css">
-    <img src="https://github.com/mowses/rjsf-bulma-css/blob/master/bulma-logo.png" alt="Logo" width="640" height="160">
+  <a href="https://github.com/mowses/rjsf-bulma">
+    <img src="https://github.com/mowses/rjsf-bulma/blob/master/bulma-logo.png" alt="Logo" width="640" height="160">
   </a>
 
-  <h3 align="center">@rjsf/bulma-css</h3>
+  <h3 align="center">@rjsf/bulma</h3>
 
   <p align="center">
   Bulma CSS theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -15,9 +15,9 @@
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
     ·
-    <a href="https://github.com/mowses/rjsf-bulma-css/issues">Report Bug</a>
+    <a href="https://github.com/mowses/rjsf-bulma/issues">Report Bug</a>
     ·
-    <a href="https://github.com/mowses/rjsf-bulma-css/issues">Request Feature</a>
+    <a href="https://github.com/mowses/rjsf-bulma/issues">Request Feature</a>
   </p>
 </p>
 
@@ -25,14 +25,14 @@
 
 ## About The Project
 
-[![rjsf-bulma-css Screen Shot][product-screenshot]](https://github.com/mowses/rjsf-bulma-css)
+[![rjsf-bulma Screen Shot][product-screenshot]](https://github.com/mowses/rjsf-bulma)
 
-Exports `bulma-css` theme, fields and widgets for `react-jsonschema-form`.
+Exports `bulma` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [bulma-css](https://bulma.io/)
+- [bulma](https://bulma.io/)
 - [Typescript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -51,25 +51,25 @@ yarn add bulma @rjsf/core
 ### Installation
 
 ```bash
-yarn add @rjsf/bulma-css
+yarn add @rjsf/bulma
 ```
 
 ## Usage
 
 ```js
-import Form from '@rjsf/bulma-css';
+import Form from '@rjsf/bulma';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as BulmaTheme } from '@rjsf/bulma-css';
+import { Theme as BulmaTheme } from '@rjsf/bulma';
 
 const Form = withTheme(BulmaTheme);
 ```
 
-[contributors-url]: https://github.com/mowses/rjsf-bulma-css/graphs/contributors
+[contributors-url]: https://github.com/mowses/rjsf-bulma/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/mit
-[product-screenshot]: https://raw.githubusercontent.com/mowses/rjsf-bulma-css/master/print1.png
+[product-screenshot]: https://raw.githubusercontent.com/mowses/rjsf-bulma/master/print1.png

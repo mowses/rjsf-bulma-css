@@ -1,8 +1,8 @@
 {
-  "name": "@rjsf/bulma-css",
+  "name": "@rjsf/bulma",
   "version": "0.9.0",
   "main": "dist/index.js",
-  "module": "dist/rjsf-bulma-css.esm.js",
+  "module": "dist/rjsf-bulma.esm.js",
   "typings": "dist/index.d.ts",
   "description": "Bulma CSS theme, tempaltes, fields and widgets for react-jsonschema-form",
   "files": [
@@ -55,12 +55,12 @@
     "schema",
     "form",
     "react",
-    "bulma-css",
-    "rjsf-bulma-css"
+    "bulma",
+    "rjsf-bulma"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mowses/rjsf-bulma-css.git"
+    "url": "git+https://github.com/mowses/rjsf-bulma.git"
   },
   "license": "MIT",
   "dependencies": {
