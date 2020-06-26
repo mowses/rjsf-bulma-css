@@ -326,7 +326,7 @@ var FieldTemplate = function FieldTemplate(_ref) {
       rawHelp = _ref.rawHelp,
       schema = _ref.schema,
       uiSchema = _ref.uiSchema;
-  var classnames = classNames;
+  var classnames = classNames || '';
 
   if (required) {
     classnames += ' required';
@@ -922,7 +922,6 @@ function SelectWidget(props) {
   var enumOptions = options.enumOptions,
       enumDisabled = options.enumDisabled;
   var emptyValue = multiple ? [] : "";
-  console.log(disabled, 'selectwidget');
   return React.createElement(Form$1.Select, {
     id: id,
     multiple: multiple,

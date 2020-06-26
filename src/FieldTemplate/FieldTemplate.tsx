@@ -34,7 +34,7 @@ const FieldTemplate = ({
   uiSchema,
 }: FieldTemplateProps) => {
   
-  let classnames = classNames;
+  let classnames = classNames || '';
   if (required) {
     classnames += ' required';
   }
