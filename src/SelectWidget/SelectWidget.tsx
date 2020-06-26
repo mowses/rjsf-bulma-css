@@ -71,7 +71,6 @@ function SelectWidget(props) {
     <Form.Select
       id={id}
       multiple={multiple}
-      className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
       disabled={disabled || readonly}

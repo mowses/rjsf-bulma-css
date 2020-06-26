@@ -322,6 +322,7 @@ var FieldTemplate = function FieldTemplate(_ref) {
       classNames = _ref.classNames,
       children = _ref.children,
       description = _ref.description,
+      disabled = _ref.disabled,
       displayLabel = _ref.displayLabel,
       help = _ref.help,
       label = _ref.label,
@@ -335,6 +336,10 @@ var FieldTemplate = function FieldTemplate(_ref) {
 
   if (required) {
     classnames += ' required';
+  }
+
+  if (disabled) {
+    classnames += ' disabled';
   }
 
   return React.createElement(Form$1.Field, {
@@ -357,7 +362,7 @@ var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
   }, description) : null, properties.map(function (element, index) {
     return React.createElement(Form$1.Field, {
       key: index,
-      className: "field-row " + (element.disabled ? 'disabled' : '')
+      className: "field-row"
     }, element.content);
   })));
 };
@@ -923,10 +928,10 @@ function SelectWidget(props) {
   var enumOptions = options.enumOptions,
       enumDisabled = options.enumDisabled;
   var emptyValue = multiple ? [] : "";
+  console.log(disabled, 'selectwidget');
   return React.createElement(Form$1.Select, {
     id: id,
     multiple: multiple,
-    className: "form-control",
     value: typeof value === "undefined" ? emptyValue : value,
     required: required,
     disabled: disabled || readonly,

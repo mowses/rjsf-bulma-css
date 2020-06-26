@@ -26,7 +26,7 @@ const ObjectFieldTemplate = ({
         ) : null}
 
         {properties.map( (element, index) => (
-          <Form.Field key={index} className={`field-row ${element.disabled ? 'disabled' : ''}`}>{element.content}</Form.Field>
+          <Form.Field key={index} className="field-row">{element.content}</Form.Field>
         ))}
 
       </Card.Content>

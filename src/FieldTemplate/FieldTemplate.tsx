@@ -23,6 +23,7 @@ const FieldTemplate = ({
   classNames,
   children,
   description,
+  disabled,
   displayLabel,
   help,
   label,
@@ -36,6 +37,9 @@ const FieldTemplate = ({
   let classnames = classNames;
   if (required) {
     classnames += ' required';
+  }
+  if (disabled) {
+    classnames += ' disabled';
   }
 
   return (
