@@ -8,8 +8,8 @@ var core = require('@rjsf/core');
 var React = _interopDefault(require('react'));
 var Box = _interopDefault(require('react-bulma-components/lib/components/box'));
 var Button = _interopDefault(require('react-bulma-components/lib/components/button'));
+var Columns = _interopDefault(require('react-bulma-components/lib/components/columns'));
 var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
-var Level = _interopDefault(require('react-bulma-components/lib/components/level'));
 var Icon = _interopDefault(require('react-bulma-components/lib/components/icon'));
 var List = _interopDefault(require('react-bulma-components/lib/components/list'));
 var Notification = _interopDefault(require('react-bulma-components/lib/components/notification'));
@@ -63,10 +63,13 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 }
 
 var AddButton = function AddButton(props) {
-  return React.createElement(Button, Object.assign({}, props, {
-    className: "button-add"
+  var className = props.className,
+      other = _objectWithoutPropertiesLoose(props, ["className"]);
+
+  return React.createElement(Button, Object.assign({}, other, {
+    className: className
   }), React.createElement(Icon, {
-    icon: "fa-add"
+    icon: "add"
   }), " Add Item");
 };
 
@@ -136,14 +139,11 @@ var DefaultArrayItem = function DefaultArrayItem(props) {
     paddingRight: 6,
     fontWeight: 'bold'
   };
-  return React.createElement(Level, {
+  return React.createElement(Columns, {
     key: props.key
-  }, React.createElement(Level.Side, {
-    align: "left"
-  }, React.createElement(Level.Item, null, props.children)), props.hasToolbar && React.createElement(Level.Side, {
-    className: "array-item-toolbox",
-    align: "right"
-  }, React.createElement(Level.Item, null, React.createElement(Button.Group, {
+  }, React.createElement(Columns.Column, null, props.children), props.hasToolbar && React.createElement(Columns.Column, {
+    className: "array-item-toolbox"
+  }, React.createElement(Button.Group, {
     hasAddons: true,
     position: "right"
   }, (props.hasMoveUp || props.hasMoveDown) && React.createElement(IconButton, {
@@ -167,7 +167,7 @@ var DefaultArrayItem = function DefaultArrayItem(props) {
     style: btnStyle,
     disabled: props.disabled || props.readonly,
     onClick: props.onDropIndexClick(props.index)
-  })))));
+  }))));
 };
 
 var DefaultFixedArrayFieldTemplate = function DefaultFixedArrayFieldTemplate(props) {
@@ -212,15 +212,11 @@ var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(p
     className: "row array-item-list"
   }, props.items && props.items.map(function (p) {
     return DefaultArrayItem(p);
-  })), React.createElement(Level, null, React.createElement(Level.Side, {
-    align: "left"
-  }), props.canAdd && React.createElement(Level.Side, {
-    align: "right"
-  }, React.createElement(Level.Item, null, React.createElement(AddButton, {
+  })), props.canAdd && React.createElement(AddButton, {
     className: "array-item-add",
     onClick: props.onAddClick,
     disabled: props.disabled || props.readonly
-  })))));
+  }));
 };
 
 var ErrorList = function ErrorList(_ref) {
@@ -262,8 +258,8 @@ var DescriptionField = function DescriptionField(_ref) {
   var description = _ref.description;
   if (!description) return null;
   return React.createElement(Element, {
-    renderAs: "p",
-    className: "description"
+    renderAs: "div",
+    className: "subtitle description"
   }, description);
 };
 
@@ -359,10 +355,10 @@ var ObjectFieldTemplate = function ObjectFieldTemplate(_ref) {
       title = _ref.title,
       properties = _ref.properties,
       uiSchema = _ref.uiSchema;
-  return React.createElement(Card, null, uiSchema['ui:title'] || title ? React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, title), React.createElement(Card.Header.Icon, null)) : null, React.createElement(Card.Content, null, description ? React.createElement(Element, {
+  return React.createElement(Card, null, (uiSchema['ui:title'] || title) && React.createElement(Card.Header, null, React.createElement(Card.Header.Title, null, title), React.createElement(Card.Header.Icon, null)), React.createElement(Card.Content, null, description && React.createElement(Element, {
     renderAs: "div",
     className: "subtitle description"
-  }, description) : null, properties.map(function (element, index) {
+  }, description), properties.map(function (element, index) {
     return React.createElement(Form$1.Field, {
       key: index,
       className: "field-row"

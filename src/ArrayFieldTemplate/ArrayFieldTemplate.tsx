@@ -3,8 +3,8 @@ import { utils } from '@rjsf/core';
 import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 import Box from 'react-bulma-components/lib/components/box';
 import Button from 'react-bulma-components/lib/components/button';
+import Columns from 'react-bulma-components/lib/components/columns';
 import Element from 'react-bulma-components/lib/components/element';
-import Level from 'react-bulma-components/lib/components/level';
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
 
@@ -73,14 +73,13 @@ const DefaultArrayItem = (props: any) => {
     fontWeight: 'bold',
   };
   return (
-    <Level key={props.key}>
-      <Level.Side align="left">
-        <Level.Item>{props.children}</Level.Item>
-      </Level.Side>
+    <Columns key={props.key}>
+      <Columns.Column>
+        {props.children}
+      </Columns.Column>
       
       {props.hasToolbar && (
-        <Level.Side className="array-item-toolbox" align="right">
-          <Level.Item>
+        <Columns.Column className="array-item-toolbox">
             <Button.Group hasAddons={ true } position="right">
               {(props.hasMoveUp || props.hasMoveDown) && (
                 <IconButton
@@ -115,10 +114,9 @@ const DefaultArrayItem = (props: any) => {
                 />
               )}
             </Button.Group>
-          </Level.Item>
-        </Level.Side>
+        </Columns.Column>
       )}
-    </Level>
+    </Columns>
   );
 };
 
@@ -180,20 +178,13 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         {props.items && props.items.map(p => DefaultArrayItem(p))}
       </Element>
 
-      <Level>
-        <Level.Side align="left"></Level.Side>
-        {props.canAdd && (
-          <Level.Side align="right">
-            <Level.Item>
-              <AddButton
-                className="array-item-add"
-                onClick={props.onAddClick}
-                disabled={props.disabled || props.readonly}
-              />
-            </Level.Item>
-          </Level.Side>
-        )}
-      </Level>
+      {props.canAdd && (
+        <AddButton
+          className="array-item-add"
+          onClick={props.onAddClick}
+          disabled={props.disabled || props.readonly}
+        />
+      )}
     </>
   );
 };

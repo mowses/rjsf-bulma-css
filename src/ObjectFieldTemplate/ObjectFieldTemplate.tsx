@@ -13,17 +13,17 @@ const ObjectFieldTemplate = ({
 
   return (
     <Card>
-      {(uiSchema['ui:title'] || title) ? (
+      {(uiSchema['ui:title'] || title) && (
         <Card.Header>
           <Card.Header.Title>{title}</Card.Header.Title>
           <Card.Header.Icon />
         </Card.Header>
-      ) : null}
+      )}
+      
       <Card.Content>
-
-        {description ? (
+        {description && (
           <Element renderAs="div" className="subtitle description">{description}</Element>
-        ) : null}
+        )}
 
         {properties.map( (element, index) => (
           <Form.Field key={index} className="field-row">{element.content}</Form.Field>

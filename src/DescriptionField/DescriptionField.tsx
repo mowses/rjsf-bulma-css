@@ -6,9 +6,7 @@ const DescriptionField = ({ description }: FieldProps) => {
   if (!description) return null;
 
   return (
-    <Element renderAs="p" className="description">
-      {description}
-    </Element>
+    <Element renderAs="div" className="subtitle description">{description}</Element>
   );
 };
 
