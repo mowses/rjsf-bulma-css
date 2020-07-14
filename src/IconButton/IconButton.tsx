@@ -1,19 +1,12 @@
 import React from 'react';
 import Button from 'react-bulma-components/lib/components/button';
-
-const mappings: any = {
-  'remove': 'fa-remove',
-  'plus': 'fa-add',
-  'arrow-up': 'fa-arrow-up',
-  'arrow-down': 'fa-arrow-down',
-  'size': 'small',
-};
+import Icon from 'react-bulma-components/lib/components/icon';
 
 const IconButton = (props: any) => {
-  const { icon, size, ...otherProps } = props;
+  const { icon, ...otherProps } = props;
   return (
-    <Button {...otherProps} size={size || mappings[size]}>
-      {mappings[icon]}
+    <Button {...otherProps}>
+      <Icon icon={icon} />
     </Button>
   );
 };

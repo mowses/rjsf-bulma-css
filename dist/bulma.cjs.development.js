@@ -7,15 +7,14 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var core = require('@rjsf/core');
 var React = _interopDefault(require('react'));
 var Box = _interopDefault(require('react-bulma-components/lib/components/box'));
-var Columns = _interopDefault(require('react-bulma-components/lib/components/columns'));
-var Level = _interopDefault(require('react-bulma-components/lib/components/level'));
 var Button = _interopDefault(require('react-bulma-components/lib/components/button'));
+var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
+var Level = _interopDefault(require('react-bulma-components/lib/components/level'));
 var Icon = _interopDefault(require('react-bulma-components/lib/components/icon'));
 var List = _interopDefault(require('react-bulma-components/lib/components/list'));
 var Notification = _interopDefault(require('react-bulma-components/lib/components/notification'));
 var MultiSchemaField = _interopDefault(require('@rjsf/core/lib/components/fields/MultiSchemaField'));
 var Form$1 = _interopDefault(require('react-bulma-components/lib/components/form'));
-var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
 var Heading = _interopDefault(require('react-bulma-components/lib/components/heading'));
 var Card = _interopDefault(require('react-bulma-components/lib/components/card'));
 var PropTypes = _interopDefault(require('prop-types'));
@@ -71,22 +70,13 @@ var AddButton = function AddButton(props) {
   }), " Add Item");
 };
 
-var mappings = {
-  'remove': 'fa-remove',
-  'plus': 'fa-add',
-  'arrow-up': 'fa-arrow-up',
-  'arrow-down': 'fa-arrow-down',
-  'size': 'small'
-};
-
 var IconButton = function IconButton(props) {
   var icon = props.icon,
-      size = props.size,
-      otherProps = _objectWithoutPropertiesLoose(props, ["icon", "size"]);
+      otherProps = _objectWithoutPropertiesLoose(props, ["icon"]);
 
-  return React.createElement(Button, Object.assign({}, otherProps, {
-    size: size || mappings[size]
-  }), mappings[icon]);
+  return React.createElement(Button, Object.assign({}, otherProps), React.createElement(Icon, {
+    icon: icon
+  }));
 };
 
 var isMultiSelect = core.utils.isMultiSelect,
@@ -146,10 +136,17 @@ var DefaultArrayItem = function DefaultArrayItem(props) {
     paddingRight: 6,
     fontWeight: 'bold'
   };
-  return React.createElement(Columns, {
-    key: props.key,
-    centered: true
-  }, React.createElement(Columns.Column, null, React.createElement(Box, null, props.children)), props.hasToolbar && React.createElement(Columns.Column, null, (props.hasMoveUp || props.hasMoveDown) && React.createElement(IconButton, {
+  return React.createElement(Level, {
+    key: props.key
+  }, React.createElement(Level.Side, {
+    align: "left"
+  }, React.createElement(Level.Item, null, props.children)), props.hasToolbar && React.createElement(Level.Side, {
+    className: "array-item-toolbox",
+    align: "right"
+  }, React.createElement(Level.Item, null, React.createElement(Button.Group, {
+    hasAddons: true,
+    position: "right"
+  }, (props.hasMoveUp || props.hasMoveDown) && React.createElement(IconButton, {
     icon: "arrow-up",
     className: "array-item-move-up",
     tabIndex: -1,
@@ -158,21 +155,23 @@ var DefaultArrayItem = function DefaultArrayItem(props) {
     onClick: props.onReorderClick(props.index, props.index - 1)
   }), (props.hasMoveUp || props.hasMoveDown) && React.createElement(IconButton, {
     icon: "arrow-down",
+    className: "array-item-move-down",
     tabIndex: -1,
     style: btnStyle,
     disabled: props.disabled || props.readonly || !props.hasMoveDown,
     onClick: props.onReorderClick(props.index, props.index + 1)
   }), props.hasRemove && React.createElement(IconButton, {
     icon: "remove",
+    className: "array-item-remove",
     tabIndex: -1,
     style: btnStyle,
     disabled: props.disabled || props.readonly,
     onClick: props.onDropIndexClick(props.index)
-  })));
+  })))));
 };
 
 var DefaultFixedArrayFieldTemplate = function DefaultFixedArrayFieldTemplate(props) {
-  return React.createElement("fieldset", {
+  return React.createElement(Box, {
     className: props.className
   }, React.createElement(ArrayFieldTitle, {
     key: "array-field-title-" + props.idSchema.$id,
@@ -180,13 +179,16 @@ var DefaultFixedArrayFieldTemplate = function DefaultFixedArrayFieldTemplate(pro
     idSchema: props.idSchema,
     title: props.uiSchema['ui:title'] || props.title,
     required: props.required
-  }), (props.uiSchema['ui:description'] || props.schema.description) && React.createElement("div", {
-    className: "field-description",
-    key: "field-description-" + props.idSchema.$id
-  }, props.uiSchema['ui:description'] || props.schema.description), React.createElement("div", {
-    className: "row array-item-list",
-    key: "array-item-list-" + props.idSchema.$id
-  }, props.items && props.items.map(DefaultArrayItem)), props.canAdd && React.createElement(AddButton, {
+  }), (props.uiSchema['ui:description'] || props.schema.description) && React.createElement(Element, {
+    renderAs: "p",
+    key: "field-description-" + props.idSchema.$id,
+    className: "description"
+  }, props.uiSchema['ui:description'] || props.schema.description), React.createElement(Element, {
+    key: "array-item-list-" + props.idSchema.$id,
+    className: "row array-item-list"
+  }, props.items && props.items.map(function (p) {
+    return DefaultArrayItem(p);
+  })), props.canAdd && React.createElement(AddButton, {
     className: "array-item-add",
     onClick: props.onAddClick,
     disabled: props.disabled || props.readonly
@@ -194,7 +196,7 @@ var DefaultFixedArrayFieldTemplate = function DefaultFixedArrayFieldTemplate(pro
 };
 
 var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(props) {
-  return React.createElement(Box, null, React.createElement(ArrayFieldTitle, {
+  return React.createElement(React.Fragment, null, React.createElement(ArrayFieldTitle, {
     key: "array-field-title-" + props.idSchema.$id,
     TitleField: props.TitleField,
     idSchema: props.idSchema,
@@ -205,19 +207,20 @@ var DefaultNormalArrayFieldTemplate = function DefaultNormalArrayFieldTemplate(p
     DescriptionField: props.DescriptionField,
     idSchema: props.idSchema,
     description: props.uiSchema['ui:description'] || props.schema.description
-  }), React.createElement(Level, {
-    key: "array-item-list-" + props.idSchema.$id
+  }), React.createElement(Element, {
+    key: "array-item-list-" + props.idSchema.$id,
+    className: "row array-item-list"
   }, props.items && props.items.map(function (p) {
     return DefaultArrayItem(p);
+  })), React.createElement(Level, null, React.createElement(Level.Side, {
+    align: "left"
   }), props.canAdd && React.createElement(Level.Side, {
     align: "right"
-  }, React.createElement(Level, {
-    item: true
-  }, React.createElement(Box, null, React.createElement(AddButton, {
+  }, React.createElement(Level.Item, null, React.createElement(AddButton, {
     className: "array-item-add",
     onClick: props.onAddClick,
     disabled: props.disabled || props.readonly
-  }))))));
+  })))));
 };
 
 var ErrorList = function ErrorList(_ref) {

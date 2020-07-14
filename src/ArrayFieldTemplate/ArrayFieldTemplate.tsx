@@ -2,7 +2,8 @@ import React from 'react';
 import { utils } from '@rjsf/core';
 import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 import Box from 'react-bulma-components/lib/components/box';
-import Columns from 'react-bulma-components/lib/components/columns';
+import Button from 'react-bulma-components/lib/components/button';
+import Element from 'react-bulma-components/lib/components/element';
 import Level from 'react-bulma-components/lib/components/level';
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
@@ -72,54 +73,58 @@ const DefaultArrayItem = (props: any) => {
     fontWeight: 'bold',
   };
   return (
-    <Columns key={props.key} centered={true}>
-      <Columns.Column>
-        <Box>
-          {props.children}
-        </Box>
-      </Columns.Column>
-
+    <Level key={props.key}>
+      <Level.Side align="left">
+        <Level.Item>{props.children}</Level.Item>
+      </Level.Side>
+      
       {props.hasToolbar && (
-        <Columns.Column>
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-up"
-              className="array-item-move-up"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
-            />
-          )}
+        <Level.Side className="array-item-toolbox" align="right">
+          <Level.Item>
+            <Button.Group hasAddons={ true } position="right">
+              {(props.hasMoveUp || props.hasMoveDown) && (
+                <IconButton
+                  icon="arrow-up"
+                  className="array-item-move-up"
+                  tabIndex={-1}
+                  style={btnStyle as any}
+                  disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                  onClick={props.onReorderClick(props.index, props.index - 1)}
+                />
+              )}
 
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-down"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
-            />
-          )}
+              {(props.hasMoveUp || props.hasMoveDown) && (
+                <IconButton
+                  icon="arrow-down"
+                  className="array-item-move-down"
+                  tabIndex={-1}
+                  style={btnStyle as any}
+                  disabled={props.disabled || props.readonly || !props.hasMoveDown}
+                  onClick={props.onReorderClick(props.index, props.index + 1)}
+                />
+              )}
 
-          {props.hasRemove && (
-            <IconButton
-              icon="remove"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
-            />
-          )}
-        </Columns.Column>
+              {props.hasRemove && (
+                <IconButton
+                  icon="remove"
+                  className="array-item-remove"
+                  tabIndex={-1}
+                  style={btnStyle as any}
+                  disabled={props.disabled || props.readonly}
+                  onClick={props.onDropIndexClick(props.index)}
+                />
+              )}
+            </Button.Group>
+          </Level.Item>
+        </Level.Side>
       )}
-    </Columns>
+    </Level>
   );
 };
 
 const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
-    <fieldset className={props.className}>
+    <Box className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -129,20 +134,14 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       />
 
       {(props.uiSchema['ui:description'] || props.schema.description) && (
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
+        <Element renderAs="p" key={`field-description-${props.idSchema.$id}`} className="description">
           {props.uiSchema['ui:description'] || props.schema.description}
-        </div>
+        </Element>
       )}
 
-      <div
-        className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
-        {props.items && props.items.map(DefaultArrayItem)}
-      </div>
+      <Element key={`array-item-list-${props.idSchema.$id}`} className="row array-item-list">
+        {props.items && props.items.map(p => DefaultArrayItem(p))}
+      </Element>
 
       {props.canAdd && (
         <AddButton
@@ -151,13 +150,13 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </fieldset>
+    </Box>
   );
 };
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
-    <Box>
+    <>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -177,24 +176,25 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         />
       )}
 
-      <Level key={`array-item-list-${props.idSchema.$id}`}>
+      <Element key={`array-item-list-${props.idSchema.$id}`} className="row array-item-list">
         {props.items && props.items.map(p => DefaultArrayItem(p))}
+      </Element>
 
+      <Level>
+        <Level.Side align="left"></Level.Side>
         {props.canAdd && (
           <Level.Side align="right">
-            <Level item={true}>
-              <Box>
-                <AddButton
-                  className="array-item-add"
-                  onClick={props.onAddClick}
-                  disabled={props.disabled || props.readonly}
-                />
-              </Box>
-            </Level>
+            <Level.Item>
+              <AddButton
+                className="array-item-add"
+                onClick={props.onAddClick}
+                disabled={props.disabled || props.readonly}
+              />
+            </Level.Item>
           </Level.Side>
         )}
       </Level>
-    </Box>
+    </>
   );
 };
 
