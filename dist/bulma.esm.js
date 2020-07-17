@@ -281,6 +281,7 @@ var OneOfField = /*#__PURE__*/function (_MultiSchemaField) {
 
 var TitleField = function TitleField(_ref) {
   var title = _ref.title;
+  if (!title) return null;
   return React.createElement(Heading, {
     renderAs: "h5"
   }, title);
