@@ -339,7 +339,7 @@ var FieldTemplate = function FieldTemplate(_ref) {
     className: classnames
   }, displayLabel && label ? React.createElement(Form$1.Label, {
     htmlFor: FieldIsBool(schema, uiSchema) ? null : id
-  }, label) : null, description, React.createElement(Form$1.Control, null, children), FieldErrorListTemplate(rawErrors), React.createElement(Form$1.Help, {
+  }, label) : null, description, React.createElement(Form$1.Control, null, children), FieldErrorListTemplate(rawErrors), (rawHelp || help && help.props.help) && React.createElement(Form$1.Help, {
     renderAs: "div"
   }, rawHelp ? rawHelp : help));
 };

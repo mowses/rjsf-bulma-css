@@ -54,7 +54,11 @@ const FieldTemplate = ({
       </Form.Control>
       
       {FieldErrorListTemplate(rawErrors)}
-      <Form.Help renderAs="div">{rawHelp ? rawHelp : help}</Form.Help>
+      {
+        (rawHelp || help && help.props.help) && (
+          <Form.Help renderAs="div">{rawHelp ? rawHelp : help}</Form.Help>
+        )
+      }
     </Form.Field>
   );
 };
