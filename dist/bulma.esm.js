@@ -1037,6 +1037,8 @@ var TextWidget = function TextWidget(_ref) {
       schema = _ref.schema;
   var input_type = type || schema.type;
 
+  var _value = Array.isArray(value) ? value.toString() : value;
+
   if (!['text', 'email', 'tel', 'password', 'number', 'search', 'color', 'date', 'time', 'datetime-local'].includes(input_type)) {
     input_type = 'text';
   }
@@ -1063,7 +1065,7 @@ var TextWidget = function TextWidget(_ref) {
     required: required,
     disabled: disabled || readonly,
     name: name,
-    value: value || value === 0 ? value : "",
+    value: _value || _value === 0 ? _value : "",
     onChange: _onChange,
     onBlur: _onBlur,
     onFocus: _onFocus

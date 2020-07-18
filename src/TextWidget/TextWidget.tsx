@@ -18,6 +18,7 @@ const TextWidget = ({
 }: WidgetProps) => {
   
   let input_type = type || (schema.type as string);
+  let _value = Array.isArray(value) ? value.toString() : value;
 
   if (!['text',
     'email',
@@ -50,7 +51,7 @@ const TextWidget = ({
       required={required}
       disabled={disabled || readonly}
       name={name}
-      value={value || value === 0 ? value : ""}
+      value={_value || _value === 0 ? _value : ""}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
