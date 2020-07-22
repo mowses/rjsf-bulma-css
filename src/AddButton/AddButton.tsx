@@ -1,13 +1,14 @@
 import React from 'react';
 import { AddButtonProps } from '@rjsf/core';
 import Button from 'react-bulma-components/lib/components/button';
-import Icon from 'react-bulma-components/lib/components/icon';
 
 const AddButton: React.FC<AddButtonProps> = props => {
     const { className, ...other } = props;
 
     return <Button {...other} className={className}>
-        <Icon icon="add" /> Add Item
+        <span className="icon">
+            <i className="fas fa-plus"></i>
+        </span> Add Item
       </Button>
 };
 

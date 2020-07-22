@@ -105,7 +105,7 @@ const DefaultArrayItem = (props: any) => {
 
               {props.hasRemove && (
                 <IconButton
-                  icon="remove"
+                  icon="times"
                   className="array-item-remove"
                   tabIndex={-1}
                   style={btnStyle as any}

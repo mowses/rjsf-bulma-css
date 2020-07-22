@@ -10,7 +10,6 @@ var Box = _interopDefault(require('react-bulma-components/lib/components/box'));
 var Button = _interopDefault(require('react-bulma-components/lib/components/button'));
 var Columns = _interopDefault(require('react-bulma-components/lib/components/columns'));
 var Element = _interopDefault(require('react-bulma-components/lib/components/element'));
-var Icon = _interopDefault(require('react-bulma-components/lib/components/icon'));
 var List = _interopDefault(require('react-bulma-components/lib/components/list'));
 var Notification = _interopDefault(require('react-bulma-components/lib/components/notification'));
 var MultiSchemaField = _interopDefault(require('@rjsf/core/lib/components/fields/MultiSchemaField'));
@@ -68,18 +67,22 @@ var AddButton = function AddButton(props) {
 
   return React.createElement(Button, Object.assign({}, other, {
     className: className
-  }), React.createElement(Icon, {
-    icon: "add"
-  }), " Add Item");
+  }), React.createElement("span", {
+    className: "icon"
+  }, React.createElement("i", {
+    className: "fas fa-plus"
+  })), " Add Item");
 };
 
 var IconButton = function IconButton(props) {
   var icon = props.icon,
       otherProps = _objectWithoutPropertiesLoose(props, ["icon"]);
 
-  return React.createElement(Button, Object.assign({}, otherProps), React.createElement(Icon, {
-    icon: icon
-  }));
+  return React.createElement(Button, Object.assign({}, otherProps), React.createElement("span", {
+    className: "icon"
+  }, React.createElement("i", {
+    className: "fas fa-" + icon
+  })));
 };
 
 var isMultiSelect = core.utils.isMultiSelect,
@@ -161,7 +164,7 @@ var DefaultArrayItem = function DefaultArrayItem(props) {
     disabled: props.disabled || props.readonly || !props.hasMoveDown,
     onClick: props.onReorderClick(props.index, props.index + 1)
   }), props.hasRemove && React.createElement(IconButton, {
-    icon: "remove",
+    icon: "times",
     className: "array-item-remove",
     tabIndex: -1,
     style: btnStyle,
